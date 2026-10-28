@@ -4,6 +4,8 @@ The official website of the student government (presidential administration) of 
 
 **Live site:** https://tamos-student-government.vercel.app · **Admin panel:** `/admin`
 
+![Home page](docs/screenshot-home.png)
+
 The interface and inline code comments are in Russian, the language of the school community and of the student team that will maintain the site.
 
 ## Features
