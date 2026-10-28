@@ -1,0 +1,4 @@
+/* Небольшая подстройка панели управления под айдентику сайта */
+:root {
+  --font-body: 'Golos Text', system-ui, sans-serif;
+}

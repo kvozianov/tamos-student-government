@@ -1,0 +1,355 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Фирменный синий TAMOS (tamos-education.kz) в нескольких ступенях */
+  --color-navy-950: #0b1b42;
+  --color-navy-900: #0c2a6b;
+  --color-navy-800: #0a3aa0;
+  --color-navy-700: #0345bf;
+  --color-navy-600: #2f63d1;
+  --color-navy-300: #9bb2e3;
+  --color-navy-100: #e9effb;
+  --color-brand-red: #d4262d;
+  --color-brand-green: #3c9a46;
+  --color-ink: #111827;
+  --color-paper: #ffffff;
+  --color-mist: #f5f6f8;
+  --color-stone: #eceef2;
+  --color-rule: #dfe2e8;
+  --color-muted: #4f5666;
+  --color-subtle: #7a8191;
+  --color-brass: #9c7f4f;
+
+  --color-tone-neutral: #676b76;
+  --color-tone-review: #66568e;
+  --color-tone-approved: #2c6673;
+  --color-tone-progress: #22508e;
+  --color-tone-soon: #9c5a17;
+  --color-tone-done: #2b6748;
+  --color-tone-partial: #86681b;
+  --color-tone-negative: #962e2e;
+
+  --ease-official: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --breakpoint-xl: 1200px;
+}
+
+@theme inline {
+  --font-serif: var(--font-oranienbaum), 'Times New Roman', serif;
+  --font-sans: var(--font-golos), system-ui, -apple-system, sans-serif;
+  --font-wide: var(--font-unbounded), var(--font-golos), sans-serif;
+}
+
+:root {
+  --header-h: 92px;
+  color-scheme: light;
+}
+@media (min-width: 1200px) {
+  :root {
+    --header-h: 138px;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--header-h) + 16px);
+  }
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    font-size: 17px;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-navy-800);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-navy-600);
+    outline-offset: 3px;
+  }
+  .on-dark :focus-visible,
+  .bg-navy-950 :focus-visible,
+  .bg-navy-900 :focus-visible {
+    outline-color: #fff;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@utility container-site {
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: 20px;
+  @media (min-width: 768px) {
+    padding-inline: 32px;
+  }
+  @media (min-width: 1200px) {
+    padding-inline: 48px;
+  }
+}
+
+@utility container-text {
+  width: 100%;
+  max-width: 760px;
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+/* Мелкие подписи капсом с широким трекингом, как NORD на whitehouse.gov */
+@utility label-wide {
+  font-family: var(--font-wide);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+@utility label-wide-sm {
+  font-family: var(--font-wide);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+@utility hairline {
+  height: 1px;
+  background: currentColor;
+  opacity: 0.18;
+}
+
+/* Подчёркивание, которое прорисовывается слева направо */
+@utility link-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.45s var(--ease-official);
+  &:hover,
+  &:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+@utility photo-hatch {
+  background-color: var(--color-mist);
+  background-image: repeating-linear-gradient(135deg, rgb(17 24 39 / 0.045) 0 1px, transparent 1px 14px);
+}
+
+@utility photo-hatch-light {
+  background-color: var(--color-stone);
+  background-image: repeating-linear-gradient(135deg, rgb(13 15 20 / 0.05) 0 1px, transparent 1px 14px);
+}
+
+/* Бегущая строка */
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.ticker-track {
+  animation: ticker 60s linear infinite;
+}
+.ticker:hover .ticker-track,
+.ticker:focus-within .ticker-track {
+  animation-play-state: paused;
+}
+
+/* Текст материалов из CMS */
+.prose-official {
+  font-size: 18px;
+  line-height: 1.72;
+  color: #1d2029;
+}
+.prose-official > * + * {
+  margin-top: 1.1em;
+}
+.prose-official h2 {
+  font-family: var(--font-serif);
+  font-size: 34px;
+  line-height: 1.15;
+  margin-top: 1.6em;
+  color: var(--color-ink);
+}
+.prose-official h3 {
+  font-family: var(--font-serif);
+  font-size: 27px;
+  line-height: 1.2;
+  margin-top: 1.4em;
+}
+.prose-official h4 {
+  font-family: var(--font-wide);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-top: 1.8em;
+}
+.prose-official a {
+  color: var(--color-navy-700);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.prose-official a:hover {
+  color: var(--color-ink);
+}
+.prose-official ul {
+  list-style: none;
+  padding-left: 0;
+}
+.prose-official ul > li {
+  position: relative;
+  padding-left: 22px;
+}
+.prose-official ul > li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.72em;
+  width: 7px;
+  height: 1px;
+  background: currentColor;
+}
+.prose-official ol {
+  list-style: decimal;
+  padding-left: 1.4em;
+}
+.prose-official li + li {
+  margin-top: 0.4em;
+}
+.prose-official blockquote {
+  border-left: 2px solid var(--color-navy-800);
+  padding: 4px 0 4px 24px;
+  font-family: var(--font-serif);
+  font-size: 26px;
+  line-height: 1.3;
+  color: var(--color-ink);
+}
+.prose-official hr {
+  border: 0;
+  height: 1px;
+  background: var(--color-rule);
+  margin: 2.4em 0;
+}
+.prose-official strong {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+.prose-official figure {
+  margin: 2em 0;
+}
+.prose-official figcaption {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--color-subtle);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Анимации, которые работают без JavaScript ---------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes word-up {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-rise {
+  animation: rise 0.8s var(--ease-official) both;
+}
+.animate-word {
+  animation: word-up 1.05s var(--ease-official) both;
+}
+.animate-fade {
+  animation: fade 0.9s ease both;
+}
+
+/* Подпись: каждый контур прорисовывается как росчерк пера */
+@keyframes sig-draw {
+  0% {
+    stroke-dashoffset: var(--sig-dash, 1);
+    opacity: 0;
+  }
+  0.5% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+@keyframes sig-fill {
+  from {
+    fill-opacity: 0;
+  }
+  to {
+    fill-opacity: 1;
+  }
+}
+.sig-path {
+  stroke-dasharray: var(--sig-dash, 1) var(--sig-dash, 1);
+  stroke-dashoffset: 0;
+  animation: sig-draw var(--sig-d, 1.2s) cubic-bezier(0.45, 0.05, 0.35, 1) var(--sig-delay, 0s) both;
+}
+.sig-path[data-filled] {
+  animation:
+    sig-draw var(--sig-d, 1.2s) cubic-bezier(0.45, 0.05, 0.35, 1) var(--sig-delay, 0s) both,
+    sig-fill 0.5s ease calc(var(--sig-delay, 0s) + var(--sig-d, 1.2s) * 0.85) both;
+}
+.sig-wait .sig-path {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise,
+  .animate-word,
+  .animate-fade,
+  .sig-path,
+  .sig-path[data-filled] {
+    animation: none;
+  }
+}

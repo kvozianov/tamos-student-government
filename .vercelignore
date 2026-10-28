@@ -1,0 +1,11 @@
+node_modules
+.next
+.env
+.env*.local
+media
+documents
+legacy
+*.log
+tsconfig.tsbuildinfo
+scripts/assets
+ADMIN-SETUP.local.txt

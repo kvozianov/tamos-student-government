@@ -1,0 +1,54 @@
+{
+  "name": "tamos-administration",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Официальный портал президентской администрации TAMOS: Next.js + Payload CMS + PostgreSQL",
+  "type": "module",
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",
+    "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
+    "ci": "cross-env NODE_OPTIONS=--no-deprecation payload migrate && npm run build",
+    "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+    "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+    "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
+    "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
+    "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
+    "seed": "tsx --env-file-if-exists=.env src/seed/index.ts",
+    "demo:clear": "tsx --env-file-if-exists=.env src/seed/clear-demo.ts",
+    "typecheck": "tsc --noEmit",
+    "signature": "node scripts/trace-signature.mjs && tsx --env-file-if-exists=.env src/seed/apply-signature.ts",
+    "program": "tsx --env-file-if-exists=.env src/seed/program.ts",
+    "leadership": "tsx --env-file-if-exists=.env src/seed/leadership.ts"
+  },
+  "engines": {
+    "node": ">=20.18.1"
+  },
+  "dependencies": {
+    "@payloadcms/db-postgres": "3.91.0",
+    "@payloadcms/next": "3.91.0",
+    "@payloadcms/richtext-lexical": "3.91.0",
+    "@payloadcms/storage-vercel-blob": "3.91.0",
+    "@payloadcms/translations": "3.91.0",
+    "@payloadcms/ui": "3.91.0",
+    "clsx": "^2.1.1",
+    "cross-env": "^7.0.3",
+    "graphql": "^16.14.2",
+    "motion": "14.3.0",
+    "next": "16.3.3",
+    "payload": "3.91.0",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "sharp": "0.35.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "postcss": "^8.5.30",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  }
+}
