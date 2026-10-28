@@ -20,6 +20,8 @@ The interface and inline code comments are in Russian, the language of the schoo
 - Contact form that stores messages for the administration (validation, honeypot and timing trap against bots).
 - Responsive layout, WCAG 2.1 AA checked with axe in CI, Open Graph images generated per page, sitemap, robots, favicon and Apple touch icon.
 
+![Events calendar](docs/screenshot-events.png)
+
 **Admin panel** (`/admin`)
 
 - Email and password sign-in; passwords are stored only as salted PBKDF2 hashes. Accounts lock for 10 minutes after 5 failed attempts.
