@@ -357,4 +357,9 @@
   .sig-path[data-filled] {
     animation: none;
   }
+  /* Motion при «уменьшить движение» убирает сдвиг, но оставляет проявление: показываем блоки сразу */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

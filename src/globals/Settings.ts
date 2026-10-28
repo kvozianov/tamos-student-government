@@ -25,7 +25,7 @@ export const Settings: GlobalConfig = {
               ],
             },
             { name: 'descriptor', type: 'text', label: 'Подпись под логотипом', defaultValue: 'Президентская администрация' },
-            { name: 'description', type: 'textarea', label: 'Описание сайта для поисковиков и соцсетей', required: true, defaultValue: 'Официальный портал президентской администрации TAMOS: новости, события, обещания, Бюро идей и отчётность.' },
+            { name: 'description', type: 'textarea', label: 'Описание сайта для поисковиков и соцсетей', required: true, defaultValue: 'Официальный сайт студенческого самоуправления TAMOS Education: новости, события, выполнение предвыборной программы и команда президента.' },
             { name: 'logo', type: 'upload', relationTo: 'media', label: 'Логотип', admin: { description: 'Если не загружен, используется печать с монограммой.' } },
             { name: 'ogImage', type: 'upload', relationTo: 'media', label: 'Картинка для соцсетей по умолчанию' },
             {
