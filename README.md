@@ -1,184 +1,174 @@
-# Портал президентской администрации TAMOS
+# TAMOS Student Government
 
-Официальный сайт администрации: новости, события с обратным отсчётом, публичный трекер обещаний, Бюро идей, галерея, архив кампании и отчётность. Весь контент редактируется в панели управления по адресу `/admin`, без правки кода.
+The official website of the student government (presidential administration) of TAMOS Education, Almaty. Students read news, follow upcoming events, and track how every point of the election programme is being delivered. The president's team publishes everything through an admin panel, without touching code.
 
-Визуальный референс: whitehouse.gov (композиция, навигация, типографика, подпись президента). Цвета и белая основа: tamos-education.kz.
+**Live site:** https://tamos-student-government.vercel.app · **Admin panel:** `/admin`
 
-## Стек
+The interface and inline code comments are in Russian, the language of the school community and of the student team that will maintain the site.
 
-| Слой | Что используется |
+## Features
+
+**Public site**
+
+- Home page: the president, the next event with a live countdown, latest news, upcoming events, programme progress and the team.
+- News with filter tabs by category, search and pagination.
+- Events as a list or a month calendar. Status updates automatically from the date: "soon" two weeks before, "completed" after the end. A countdown appears only once the date is officially confirmed.
+- Programme tracker: every election promise has a status, a dated history of changes and supporting evidence; totals are computed from the data.
+- Team, Ideas Bureau (student project proposals), photo gallery, reports, campaign archive, site-wide search.
+- Contact form that stores messages for the administration (validation, honeypot and timing trap against bots).
+- Responsive layout, WCAG 2.1 AA checked with axe in CI, Open Graph images generated per page, sitemap, robots, favicon and Apple touch icon.
+
+**Admin panel** (`/admin`)
+
+- Email and password sign-in; passwords are stored only as salted PBKDF2 hashes. Accounts lock for 10 minutes after 5 failed attempts.
+- Roles: administrator (everything) and editor (only the sections the administrator grants).
+- Create, edit and delete news, events, programme items, team members, reports, albums; image upload with focal point and automatic responsive sizes.
+- Drafts and publishing with version history; **Preview** opens the real page with the latest draft, visible only to signed-in staff.
+- Contact-form inbox with statuses (new, in progress, answered).
+- Every save invalidates the page cache, so changes are live immediately.
+
+## Stack
+
+| Layer | Technology |
 |---|---|
-| Сайт | Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, Motion |
-| CMS и API | Payload CMS 3, встроена в то же приложение, админка на русском |
-| База данных | PostgreSQL через `@payloadcms/db-postgres`, миграции в `src/migrations` |
-| Файлы | Локально папки `media/` и `documents/`, в продакшене Vercel Blob |
-| Шрифты | Oranienbaum (заголовки), Golos Text (текст), Unbounded (подписи капсом) |
+| Framework | Next.js 16 (App Router, React Server Components, Server Actions), React 19, TypeScript |
+| Content and admin | Payload CMS 3, embedded in the same Next.js app |
+| Database | PostgreSQL (Neon in production) with versioned migrations in `src/migrations` |
+| Files | Vercel Blob in production, local disk when self-hosted |
+| Styling | Tailwind CSS 4 with design tokens, Motion for small animations |
+| Quality | ESLint, TypeScript strict, Vitest, Playwright + axe-core, GitHub Actions |
+| Hosting | Vercel (Frankfurt region); Docker image for self-hosting |
 
-## Почему новое приложение, а не доработка старого сайта
+### Why Payload CMS and PostgreSQL
 
-Прежний сайт Andrewmetr был статическим: контент лежал в файле `data/content.js`, базы данных и входа для редакции не было. Для CMS, ролей и загрузки файлов такая архитектура не подходит, поэтому сделано новое приложение. Старый сайт не удалён: он лежит в `legacy/andrewmetr-static/` и по-прежнему опубликован на andrewmetr.vercel.app. Все его события и обещания перенесены в базу командой `npm run seed` вместе с историей обновлений.
+The brief needed authentication with hashed passwords, CRUD for several content types, image uploads, drafts with preview, roles and an audit trail. Payload provides all of this as code-defined collections inside the same Next.js app, so there is one repository, one deployment and one TypeScript type system from the database to the page. Writing the same with NextAuth + Prisma + a hand-made admin UI would have meant several thousand more lines to maintain for a student team.
 
-## Разделы сайта
+PostgreSQL was chosen over SQLite because the site runs on serverless functions (Vercel), where a local SQLite file is not persistent between requests. Neon's free tier gives a managed Postgres with point-in-time restore, and any standard Postgres works without code changes, so the school can move the database to its own server or to Supabase at any time.
 
-| Адрес | Что там |
-|---|---|
-| `/` | Президент, подпись, отсчёт до ближайшего события, обращение, пять направлений, новости |
-| `/administration`, `/administration/[slug]` | Президент и команда, личные страницы |
-| `/news`, `/news/[slug]` | Новости с рубриками, поиском и пагинацией |
-| `/events`, `/events/[slug]` | Каталог событий со статусами, программой, регистрацией и отсчётом |
-| `/promises`, `/promises/[slug]` | Трекер обещаний: статистика, фильтры, история, подтверждения |
-| `/ideas`, `/ideas/[slug]` | Бюро идей: как работает, кейсы, кнопка на Google Forms |
-| `/gallery`, `/gallery/[slug]` | Альбомы с полноэкранным просмотром фото и видео |
-| `/campaign` | Архив кампании: история, программа, хроника, команда, итоги |
-| `/reports`, `/reports/[slug]` | Отчёты, утверждённые инициативы, реализованные проекты, текущая работа |
-| `/search` | Поиск по всем разделам |
-
-## Правила, которые сайт соблюдает сам
-
-- **Отсчёт до события** показывается только если в CMS отмечено «Дата утверждена официально» и указано время начала. По предварительной дате таймер не показывается, вместо него «Дата проведения уточняется».
-- **Статус события** дополняется датой автоматически: за 14 дней до утверждённой даты становится «Скоро состоится», после окончания — «Завершено». Отменённые события не меняются. Статус пересчитывается вместе со страницей не реже раза в минуту, см. «Кэш».
-- **Статистика обещаний** считается по фактическим статусам в базе и обновляется сразу после правки в CMS.
-- **Связи между разделами** двусторонние: отметили обещание в отчёте — ссылка на отчёт появится на странице обещания.
-- **Демо-материалы** помечены значком «Демо». Их можно скрыть целиком в «Настройках сайта» и удалить командой ниже.
-
-## Подпись президента
-
-Подпись хранится в карточке президента (Администрация → поле «Подпись (SVG-код)») и рисуется на сайте как росчерк пера. Чтобы заменить её новым сканом, положите изображение в `scripts/assets/signature-source.webp` и выполните:
-
-```bash
-npm run signature
-```
-
-Скрипт превращает скан в центральные линии штрихов, сохраняет `src/seed/signature.svg`, обновляет подпись по умолчанию в `src/lib/signature-default.ts` и записывает её президенту в базу. Лучше всего подходит тёмная подпись на белом фоне без теней.
-
-## Роли
-
-| Роль | Права |
-|---|---|
-| Администратор | Всё: материалы, удаление, пользователи, настройки сайта, ссылка на Google Forms |
-| Редактор | Создаёт и правит материалы только в разделах, которые выдал администратор. Удалять и менять настройки не может |
-
-Первый пользователь, зарегистрированный на `/admin`, автоматически становится администратором.
-
-## Локальный запуск
-
-Нужны Node.js 20.18+ и PostgreSQL.
-
-```bash
-cp .env.example .env
-```
-
-Заполните `DATABASE_URL` и `PAYLOAD_SECRET`, затем:
-
-```bash
-npm install
-npm run dev
-```
-
-Сайт откроется на http://localhost:3000, панель управления на http://localhost:3000/admin. В режиме разработки схема базы создаётся автоматически.
-
-Начальное наполнение (переносит данные старого сайта и создаёт учётные записи из `.env`):
-
-```bash
-npm run seed
-```
-
-Посмотреть, какие демо-материалы будут удалены, и удалить их:
-
-```bash
-npm run demo:clear
-```
-
-```bash
-npm run demo:clear -- --yes
-```
-
-## Развёртывание
-
-Сайт готов к Vercel. Сборка запускает миграции базы перед `next build` (`npm run ci`, прописано в `vercel.json`).
-
-1. Создать базу PostgreSQL, например Neon через Vercel Marketplace.
-2. Создать хранилище Vercel Blob для фото, видео и документов.
-3. Задать переменные окружения проекта:
-
-| Переменная | Значение |
-|---|---|
-| `DATABASE_URL` | Строка подключения к PostgreSQL |
-| `PAYLOAD_SECRET` | Случайная строка, `openssl rand -hex 32` |
-| `NEXT_PUBLIC_SITE_URL` | Адрес сайта без слэша на конце |
-| `NEXT_PUBLIC_SITE_TIMEZONE` | Часовой пояс школы, по умолчанию `Asia/Almaty` |
-| `BLOB_READ_WRITE_TOKEN` | Токен Vercel Blob |
-| `ADMIN_SETUP_TOKEN` | Секрет для регистрации первого администратора |
-
-4. Задеплоить и создать первого администратора по ссылке `/admin/create-first-user?setup=<ADMIN_SETUP_TOKEN>`. Без токена форма регистрации закрыта, чтобы на публичном адресе никто посторонний не занял роль администратора.
-5. Подключить домен в настройках проекта Vercel.
-
-Если схема данных меняется, создайте миграцию и закоммитьте её вместе с кодом:
-
-```bash
-npm run migrate:create -- название-изменения
-```
-
-## Кэш
-
-Публичные страницы отдаются из кэша Vercel (ISR): открываются за десятки миллисекунд и почти не нагружают базу. Свежесть держится так.
-
-- **Правки в CMS видны сразу.** После сохранения или удаления любого материала, файла, глобальных настроек хуки `afterChange` и `afterDelete` (`src/hooks/revalidate.ts`) сбрасывают кэш всего сайта. Следующий посетитель любой страницы получает её свежую версию, ждать минуту не нужно.
-- **Статусы, зависящие от времени** («Скоро состоится», «Завершено», ближайшие события в шапке и на главной), пересчитываются при пересборке страницы. Страница считается свежей 60 секунд (`revalidate` в `src/app/(frontend)/layout.tsx`). Первый запрос после этого ещё получает копию из кэша и запускает пересборку в фоне, следующие видят новую версию. Копию старше часа сайт не отдаёт (`expireTime` в `next.config.ts`): после долгого простоя первый посетитель дождётся свежей сборки. Обратный отсчёт всегда считается в браузере.
-- **Фильтры списков** (`/promises?status=done`, `/events?status=soon`, `/news?category=…&page=2`, `/reports?type=…`, `/gallery?year=…`) тоже кэшируются: `next.config.ts` переписывает такие адреса на служебные страницы `/filtered/…`, правила — в `src/lib/filters.ts`. Ссылки на фильтры ставьте через компонент `SiteLink`: он открывает их обычным переходом браузера. С `next/link` клиентский роутер Next показал бы раздел без фильтра.
-- **Без кэша** работают поиск `/search`, поиск по новостям `/news?q=…` и панель `/admin`.
-- **Скрипты** `npm run seed`, `demo:clear`, `signature` работают вне Next.js и кэш не сбрасывают, хуки в них молча пропускают сброс. После запуска на продакшен-базе сохраните любую запись в `/admin`, например «Настройки сайта», и кэш сбросится сразу. Иначе страницы обновятся сами, самое позднее через час.
-
-Страница пришла из кэша, если заголовок `x-vercel-cache` равен `HIT`, `STALE` или `PRERENDER`. `MISS` означает, что её только что собрали.
-
-```bash
-curl -sI https://tamos-administration.vercel.app/promises | grep -i x-vercel-cache
-```
-
-Локально кэш работает только в продакшен-сборке: `npm run build && npm run start`, заголовок `x-nextjs-cache`. В `npm run dev` страницы всегда собираются заново.
-
-## Текущий продакшен
-
-| Что | Где |
-|---|---|
-| Сайт | https://tamos-administration.vercel.app |
-| Проект Vercel | `tamos-administration` |
-| База | Neon, регион Франкфурт, ресурс `tamos-db` |
-| Файлы | Vercel Blob `tamos-media`, Франкфурт |
-
-## Переезд на Supabase
-
-Сайт работает с любым PostgreSQL, поэтому переезд не требует правок кода.
-
-1. Создать проект в Supabase и взять строку подключения через пулер (Session pooler, порт 5432).
-2. Перенести данные из текущей базы:
-
-```bash
-pg_dump --no-owner --no-acl "$OLD_DATABASE_URL" | psql "$SUPABASE_DATABASE_URL"
-```
-
-3. Заменить `DATABASE_URL` в настройках проекта Vercel и сделать новый деплой.
-4. Файлы остаются в Vercel Blob. При желании их тоже можно перенести в Supabase Storage через S3-адаптер Payload (`@payloadcms/storage-s3`).
-
-## Как развивать дальше
-
-- **Свои заявки в Бюро идей вместо Google Forms.** Добавить коллекцию заявок в Payload, публичную форму с серверной валидацией и хук `afterChange`, который отправляет уведомление в Telegram через Bot API. Ссылка на Google Forms в настройках останется запасным вариантом.
-- **Почта.** Сейчас письма о сбросе пароля пишутся в лог сервера. Для продакшена подключите почтовый адаптер Payload (например, Resend или SMTP).
-- **Языки.** Payload поддерживает локализацию полей, можно добавить казахскую и английскую версии.
-
-## Структура
+## Project structure
 
 ```
 src/
-  app/(frontend)/   публичный сайт: страницы разделов, layout, стили
-  app/(payload)/    панель управления и REST API Payload
-  collections/      схемы контента: новости, события, обещания и другие
-  globals/          настройки сайта, главная, Бюро идей, кампания
-  hooks/            хуки Payload: сброс кэша сайта после правок
-  access/           роли и права
-  components/site/  компоненты сайта: шапка, подпись, отсчёт, галерея
-  lib/              запросы к базе, статусы, даты, фильтры списков, форматирование
-  migrations/       миграции базы для продакшена
-  seed/             начальное наполнение и очистка демо
-legacy/andrewmetr-static/   прежняя статическая версия сайта
+  app/(frontend)/   public site: pages, layout, styles, contact server action
+  app/(payload)/    admin panel and REST API
+  app/next/         draft preview on/off routes
+  collections/      content schemas: news, events, programme, team, messages, users…
+  globals/          site settings, home page, Ideas Bureau, campaign archive
+  components/site/  UI components (header, cards, calendar, countdown, forms)
+  lib/              data access, event status rules, calendar, filters, formatting
+  hooks/            cache invalidation after edits
+  migrations/       database migrations for production
+  seed/             demo content and the admin bootstrap script
+tests/unit/         Vitest
+tests/e2e/          Playwright smoke and accessibility tests
+docs/               design system
 ```
+
+The visual language (colours, typography, grid, components, photo rules) is documented in [docs/design-system.md](docs/design-system.md).
+
+## Running locally
+
+Requirements: Node.js 20.18+ and PostgreSQL 14+ (or Docker, see below).
+
+```bash
+cp .env.example .env        # set DATABASE_URL and PAYLOAD_SECRET
+npm install
+npm run dev                 # http://localhost:3000, admin at /admin
+```
+
+In development Payload creates the schema automatically. To fill an empty database with demo content and create an administrator:
+
+```bash
+npm run seed:all
+ADMIN_EMAIL=you@example.com ADMIN_PASSWORD='a-long-password' npm run create-admin
+```
+
+All demo records are flagged as demo and show a "Demo" badge. They can be hidden in Site settings or removed with `npm run demo:clear -- --yes`.
+
+### Scripts
+
+| Command | What it does |
+|---|---|
+| `npm run dev` / `build` / `start` | Next.js development server, production build, production server |
+| `npm run lint` / `typecheck` | ESLint and TypeScript checks |
+| `npm test` | Unit tests (event status rules, calendar, contact validation, links) |
+| `npm run test:e2e` | Playwright smoke tests on desktop and mobile, including axe accessibility checks |
+| `npm run migrate` / `migrate:create -- name` | Apply or create database migrations |
+| `npm run create-admin` | Create an administrator from `ADMIN_EMAIL` / `ADMIN_PASSWORD`, or reset that account's password |
+| `npm run seed:all` | Demo content: programme, events, news, team |
+
+### Tests
+
+```bash
+npm run build && npm run start     # in one terminal
+E2E_ADMIN_EMAIL=… E2E_ADMIN_PASSWORD=… npm run test:e2e
+```
+
+The smoke suite covers the home page, a news article, the events calendar, the contact form, redirects from old URLs, sign-in to the admin panel, creating and publishing a news item, and checking that a draft is hidden from visitors but visible in preview. GitHub Actions runs lint, types and unit tests on every push, then builds the site against a fresh Postgres service, seeds it and runs the Playwright suite.
+
+## Deployment on Vercel
+
+The production build runs migrations first (`npm run ci`, set in `vercel.json`).
+
+1. Create a Postgres database (Neon through the Vercel Marketplace) and a Vercel Blob store; both inject their variables into the project.
+2. Add `PAYLOAD_SECRET` (`openssl rand -hex 32`), `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_SITE_TIMEZONE=Asia/Almaty`.
+3. Deploy, then create the first administrator against the production database:
+
+   ```bash
+   vercel env pull .env.production.local --environment=production
+   set -a; source .env.production.local; set +a
+   ADMIN_EMAIL=you@example.com ADMIN_PASSWORD='a-long-password' npm run create-admin
+   ```
+
+### Caching
+
+Public pages are served from the CDN with incremental static regeneration: a page is fresh for 60 seconds and is never served older than one hour. Any save in the admin panel revalidates the whole site immediately (`src/hooks/revalidate.ts`). List filters such as `/events?status=soon` are rewritten to cached paths (`src/lib/filters.ts`), so filtered views are cached too. Search, the admin panel and preview are always dynamic.
+
+## Moving to the school's hosting
+
+The app is a standard Node.js server plus PostgreSQL; nothing in the code depends on Vercel.
+
+**1. Database.** Create a PostgreSQL 14+ database on the school server (or keep Neon). Copy the data:
+
+```bash
+pg_dump --no-owner --no-acl "$OLD_DATABASE_URL" > tamos.sql
+psql "$NEW_DATABASE_URL" < tamos.sql
+```
+
+**2. Files.** If Vercel Blob stays, nothing changes. To keep uploads on the server, leave `BLOB_READ_WRITE_TOKEN` empty; new uploads go to `./media` and `./documents`. Existing files can be downloaded from the Blob store and re-uploaded through the admin panel.
+
+**3. Run the site.** With Docker:
+
+```bash
+cp .env.example .env    # PAYLOAD_SECRET, NEXT_PUBLIC_SITE_URL, optional POSTGRES_PASSWORD
+docker compose up -d    # Postgres + site on port 3000; first start builds the app (2–3 min)
+docker compose exec app npm run create-admin   # with ADMIN_EMAIL / ADMIN_PASSWORD in .env
+```
+
+Without Docker: `npm ci && npm run migrate && npm run build && npm run start` under a process manager (systemd or pm2), Node.js 20.18+, at least 2 GB RAM for the build.
+
+**4. Domain and HTTPS.** Point a subdomain such as `student.tamos-education.kz` to the server (A record) or to Vercel (CNAME `cname.vercel-dns.com`). On a server, put Nginx or Caddy in front of port 3000 for TLS. Set `NEXT_PUBLIC_SITE_URL` to the final address and redeploy: it is used for canonical links, the sitemap, Open Graph images and the admin panel's CSRF protection.
+
+**5. Environment variables.**
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `DATABASE_URL` | yes | PostgreSQL connection string |
+| `PAYLOAD_SECRET` | yes | Signs sessions; changing it signs everyone out |
+| `NEXT_PUBLIC_SITE_URL` | yes | Public address without a trailing slash |
+| `NEXT_PUBLIC_SITE_TIMEZONE` | no | Defaults to `Asia/Almaty` |
+| `BLOB_READ_WRITE_TOKEN` | no | Vercel Blob for uploads; local disk if empty |
+| `ADMIN_SETUP_TOKEN` | no | Protects first-user sign-up on an empty database |
+
+**6. Backups.** Neon keeps point-in-time restore for the free-tier history window. On a self-hosted server, add a nightly dump and keep at least 14 days:
+
+```bash
+# crontab -e
+0 3 * * * pg_dump --format=custom "$DATABASE_URL" > /backups/tamos-$(date +\%F).dump && find /backups -name 'tamos-*.dump' -mtime +14 -delete
+```
+
+Restore with `pg_restore --clean --no-owner -d "$DATABASE_URL" /backups/tamos-YYYY-MM-DD.dump`. Back up the `media/` and `documents/` folders together with the database if files are stored locally.
+
+## Licence
+
+MIT © Kirill Vozianov

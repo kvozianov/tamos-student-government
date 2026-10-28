@@ -143,9 +143,12 @@
   }
 }
 
+/* Фирменная заглушка вместо фото: светло-синее поле с тонкой штриховкой и отсветом в углу */
 @utility photo-hatch {
-  background-color: var(--color-mist);
-  background-image: repeating-linear-gradient(135deg, rgb(17 24 39 / 0.045) 0 1px, transparent 1px 14px);
+  background-color: var(--color-navy-100);
+  background-image:
+    radial-gradient(circle at 85% 15%, rgb(1 120 188 / 0.16), transparent 55%),
+    repeating-linear-gradient(135deg, rgb(3 69 191 / 0.07) 0 1px, transparent 1px 14px);
 }
 
 @utility photo-hatch-light {

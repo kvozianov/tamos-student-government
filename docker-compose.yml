@@ -1,0 +1,37 @@
+# Local or school-server deployment: PostgreSQL + the site. Usage:
+#   cp .env.example .env   # fill PAYLOAD_SECRET and NEXT_PUBLIC_SITE_URL
+#   docker compose up -d
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tamos
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tamos}
+      POSTGRES_DB: tamos
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U tamos']
+      interval: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://tamos:${POSTGRES_PASSWORD:-tamos}@db:5432/tamos
+      NODE_ENV: production
+    ports:
+      - '${PORT:-3000}:3000'
+    volumes:
+      # Uploaded photos and documents when Vercel Blob is not configured
+      - ./media:/app/media
+      - ./documents:/app/documents
+
+volumes:
+  pgdata:

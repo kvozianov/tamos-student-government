@@ -1,0 +1,13 @@
+node_modules
+.next
+.git
+.env*
+!.env.example
+media
+documents
+legacy
+test-results
+playwright-report
+*.log
+ADMIN_ACCESS.md
+ADMIN-SETUP.local.txt

@@ -23,14 +23,14 @@ export function PhotoPlaceholder({ label, className, tone = 'light' }: { label?:
     <div
       className={clsx(
         'relative flex size-full items-center justify-center overflow-hidden',
-        tone === 'dark' ? 'bg-navy-950 text-white/35' : 'photo-hatch text-ink/25',
+        tone === 'dark' ? 'bg-navy-950 text-white/35' : 'photo-hatch text-navy-700/35',
         className,
       )}
       role="img"
       aria-label={label ?? 'Фотография будет добавлена'}
     >
       <Seal size={64} />
-      {label ? <span className="label-wide-sm absolute bottom-4 left-4 right-4">{label}</span> : null}
+      {label ? <span className={clsx('label-wide-sm absolute bottom-4 left-4 right-4', tone === 'dark' ? 'text-white/70' : 'text-navy-900')}>{label}</span> : null}
     </div>
   )
 }
