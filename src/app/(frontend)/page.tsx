@@ -196,7 +196,8 @@ export default async function HomePage() {
                   </Link>
                 ) : (
                   <Link href={d.href} className="group relative flex aspect-[3/4] flex-col justify-between overflow-hidden border border-rule bg-paper p-5 transition-colors duration-300 hover:border-navy-700">
-                    <span className="font-serif text-[64px] leading-none text-navy-700/15 transition-colors duration-300 group-hover:text-navy-700/30">{String(i + 1).padStart(2, '0')}</span>
+                    {/* Номер плитки — чистый декор, поэтому выводится через ::before и не читается как текст */}
+                    <span aria-hidden="true" data-index={String(i + 1).padStart(2, '0')} className="font-serif text-[64px] leading-none text-navy-700/15 transition-colors duration-300 group-hover:text-navy-700/30 before:content-[attr(data-index)]" />
                     <span>
                       <span className="label-wide block text-ink">{d.label}</span>
                       <span className="mt-2 block text-[14px] leading-snug text-muted">{d.line}</span>
