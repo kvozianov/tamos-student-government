@@ -53,16 +53,17 @@ export function Signature({ shape, className, delay = 0.5, duration = 2.6, strok
   const lengths = sig.paths.map((p) => Math.max(1, svgPathLength(p.d)))
   const weights = lengths.map((l) => Math.max(l, vbWidth * 0.02))
   const total = weights.reduce((a, b) => a + b, 0)
-  let cursor = delay
+  const durations = weights.map((w) => (w / total) * duration)
+  // Следующий штрих начинается чуть раньше конца предыдущего, как при живом росчерке.
+  const starts = durations.map((_, i) => durations.slice(0, i).reduce((acc, d) => acc + d * 0.92, delay))
 
   return (
     <svg ref={ref} viewBox={sig.viewBox} className={clsx(className, waiting && 'sig-wait')} role="img" aria-label={label} fill="none">
       {sig.paths.map((p, i) => {
-        const d = (weights[i] / total) * duration
+        const d = durations[i]
         // запас 2% и 2 единицы, чтобы округления браузера не обрезали конец штриха
         const dash = (lengths[i] * 1.02 + 2).toFixed(1)
-        const style = { '--sig-d': `${d.toFixed(2)}s`, '--sig-delay': `${cursor.toFixed(2)}s`, '--sig-dash': dash } as React.CSSProperties
-        cursor += d * 0.92
+        const style = { '--sig-d': `${d.toFixed(2)}s`, '--sig-delay': `${starts[i].toFixed(2)}s`, '--sig-dash': dash } as React.CSSProperties
         return p.filled ? (
           <path key={i} d={p.d} className="sig-path" data-filled="" style={style} fill="currentColor" stroke="currentColor" strokeWidth={0.6} />
         ) : (

@@ -89,7 +89,7 @@ export default async function ReportPage({ params }: Props) {
           ) : null}
         </div>
         <aside className="space-y-12">
-          <Related title="Обещания" items={promises.map((p) => ({ href: `/promises/${p.slug}`, kind: 'Обещание', title: p.title, meta: <StatusBadge kind="promise" status={p.status} /> }))} />
+          <Related title="Обещания" items={promises.map((p) => ({ href: `/programme/${p.slug}`, kind: 'Обещание', title: p.title, meta: <StatusBadge kind="promise" status={p.status} /> }))} />
           <Related title="События" items={events.map((e) => ({ href: `/events/${e.slug}`, kind: 'Событие', title: e.title, meta: <StatusBadge kind="event" status={effectiveEventStatus(e)} /> }))} />
           <Related title="Бюро идей" items={ideas.map((i) => ({ href: `/ideas/${i.slug}`, kind: 'Проект', title: i.title }))} />
           <div>

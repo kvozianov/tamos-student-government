@@ -12,6 +12,7 @@ import { Documents } from './collections/Documents'
 import { Events } from './collections/Events'
 import { Ideas } from './collections/Ideas'
 import { Media } from './collections/Media'
+import { Messages } from './collections/Messages'
 import { Members } from './collections/Members'
 import { News } from './collections/News'
 import { Promises } from './collections/Promises'
@@ -53,7 +54,7 @@ export default buildConfig({
     },
   },
   i18n: { supportedLanguages: { ru }, fallbackLanguage: 'ru' },
-  collections: [News, Events, Promises, Categories, Ideas, Reports, Albums, Members, Media, Documents, Users],
+  collections: [News, Events, Promises, Categories, Ideas, Reports, Albums, Members, Media, Documents, Messages, Users],
   globals: [Home, IdeasPage, Campaign, Settings],
   editor,
   secret: process.env.PAYLOAD_SECRET || '',

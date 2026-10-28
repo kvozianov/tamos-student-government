@@ -88,7 +88,7 @@ export default async function CampaignPage() {
             <h2 id="program-title" className="font-serif text-[40px] leading-none md:text-[52px]">
               Предвыборная программа
             </h2>
-            <Link href="/promises" className="label-wide-sm link-draw mt-6 inline-block text-navy-700">
+            <Link href="/programme" className="label-wide-sm link-draw mt-6 inline-block text-navy-700">
               Ход выполнения →
             </Link>
           </div>
@@ -99,7 +99,7 @@ export default async function CampaignPage() {
                 <li key={p.id} className="group relative grid gap-2 border-b border-rule py-5 md:grid-cols-[48px_1fr_240px] md:gap-6">
                   <span className="label-wide-sm pt-2 text-subtle">{String(p.number ?? i + 1).padStart(2, '0')}</span>
                   <div>
-                    <Link href={`/promises/${p.slug}`} className="font-serif text-[23px] leading-snug after:absolute after:inset-0 group-hover:underline">
+                    <Link href={`/programme/${p.slug}`} className="font-serif text-[23px] leading-snug after:absolute after:inset-0 group-hover:underline">
                       {p.title}
                     </Link>
                     <p className="mt-1 text-[15px] leading-relaxed text-muted">{p.summary}</p>

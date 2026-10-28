@@ -9,11 +9,11 @@ import { previewUrl } from '@/lib/site'
 
 export const Promises: CollectionConfig = {
   slug: 'promises',
-  labels: { singular: 'Обещание', plural: 'Обещания' },
+  labels: { singular: 'Пункт программы', plural: 'Программа' },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['number', 'title', 'category', 'status', 'deadline', '_status', 'isDemo'],
-    group: 'Обещания',
+    group: 'Программа',
     listSearchableFields: ['title', 'summary'],
     preview: (doc) => previewUrl('promises', doc?.slug as string | undefined),
   },

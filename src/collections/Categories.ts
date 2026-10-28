@@ -7,7 +7,7 @@ import { revalidateCollection } from '@/hooks/revalidate'
 export const Categories: CollectionConfig = {
   slug: 'categories',
   labels: { singular: 'Тема', plural: 'Темы обещаний' },
-  admin: { useAsTitle: 'title', defaultColumns: ['title', 'order'], group: 'Обещания' },
+  admin: { useAsTitle: 'title', defaultColumns: ['title', 'order'], group: 'Программа' },
   defaultSort: 'order',
   access: { read: () => true, create: canManage('categories'), update: canManage('categories'), delete: isAdmin },
   hooks: revalidateCollection,

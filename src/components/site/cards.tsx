@@ -157,7 +157,7 @@ export function PromiseRow({ item }: { item: PromiseDoc }) {
       <div>
         {item.number ? <p className="label-wide-sm mb-2 text-subtle">Пункт {item.number}</p> : null}
         <h3 className="font-serif text-[26px] leading-[1.15] text-ink md:text-[29px]">
-          <Link href={`/promises/${item.slug}`} className="after:absolute after:inset-0 group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4">
+          <Link href={`/programme/${item.slug}`} className="after:absolute after:inset-0 group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4">
             {item.title}
           </Link>
         </h3>
@@ -193,7 +193,7 @@ export function MemberCard({ member, priority }: { member: Member; priority?: bo
       />
       <div className="mt-4">
         <h3 className="font-serif text-[25px] leading-tight text-ink">
-          <Link href={`/administration/${member.slug}`} className="after:absolute after:inset-0 group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4">
+          <Link href={`/team/${member.slug}`} className="after:absolute after:inset-0 group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4">
             {member.name}
           </Link>
         </h3>

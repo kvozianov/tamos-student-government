@@ -1,7 +1,7 @@
-import { PromisesView, promisesMeta } from '@/app/(frontend)/promises/view'
+import { PromisesView, promisesMeta } from '@/app/(frontend)/programme/view'
 import { fromSegment } from '@/lib/filters'
 
-// Служебная страница для /promises?category=…&status=… (rewrites в next.config.ts). Каждое сочетание кэшируется.
+// Служебная страница для /programme?category=…&status=… (rewrites в next.config.ts). Каждое сочетание кэшируется.
 export const metadata = promisesMeta
 
 export function generateStaticParams() {

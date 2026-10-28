@@ -3,7 +3,9 @@ import React from 'react'
 const links = [
   { href: '/admin/collections/news/create', label: 'Написать новость' },
   { href: '/admin/collections/events', label: 'События и статусы' },
-  { href: '/admin/collections/promises', label: 'Обещания' },
+  { href: '/admin/collections/promises', label: 'Пункты программы' },
+  { href: '/admin/collections/members', label: 'Команда' },
+  { href: '/admin/collections/messages', label: 'Обращения' },
   { href: '/admin/collections/reports/create', label: 'Новый отчёт' },
   { href: '/admin/collections/albums/create', label: 'Новый альбом' },
   { href: '/admin/globals/settings', label: 'Ссылка на Google Forms' },

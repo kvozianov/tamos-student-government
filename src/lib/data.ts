@@ -1,8 +1,9 @@
 import config from '@payload-config'
+import { draftMode } from 'next/headers'
 import { getPayload, type Where } from 'payload'
 import { cache } from 'react'
 
-import type { Album, Category, Event, Idea, Member, News, Promise as PromiseDoc, Report } from '@/payload-types'
+import type { Album, Category, Event, Idea, Member, News, Promise as PromiseDoc } from '@/payload-types'
 
 import { compareUpcoming, effectiveEventStatus, isUpcoming } from './events'
 import { PROMISE_STATUSES, type EventStatus, type NewsCategory, type PromiseStatus, type ReportType } from './status'
@@ -24,6 +25,16 @@ async function publicWhere(parts: (Where | null | undefined | false)[], { drafts
   if (drafts) and.push(PUBLISHED)
   if (settings.showDemo === false) and.push(NOT_DEMO)
   return { and }
+}
+
+/**
+ * Условие для страницы материала. В режиме предпросмотра (/next/preview, только для вошедших в панель)
+ * отдаётся последняя версия, в том числе неопубликованный черновик.
+ */
+async function bySlug(slug: string): Promise<{ where: Where; draft: boolean }> {
+  const { isEnabled } = await draftMode()
+  if (isEnabled) return { where: { slug: { equals: slug } }, draft: true }
+  return { ...(await bySlug(slug)), draft: false }
 }
 
 /* ---------- Администрация ---------- */
@@ -112,7 +123,7 @@ export const getLatestNews = cache(async (limit = 5): Promise<News[]> => {
 
 export async function getNewsItem(slug: string) {
   const payload = await getClient()
-  const res = await payload.find({ collection: 'news', where: await publicWhere([{ slug: { equals: slug } }]), depth: 2, limit: 1 })
+  const res = await payload.find({ collection: 'news', ...(await bySlug(slug)), depth: 2, limit: 1 })
   return res.docs[0] ?? null
 }
 
@@ -153,7 +164,7 @@ export async function getEvent(slug: string) {
   const payload = await getClient()
   const res = await payload.find({
     collection: 'events',
-    where: await publicWhere([{ slug: { equals: slug } }]),
+    ...(await bySlug(slug)),
     depth: 2,
     limit: 1,
     joins: {
@@ -213,7 +224,7 @@ export async function getPromise(slug: string) {
   const payload = await getClient()
   const res = await payload.find({
     collection: 'promises',
-    where: await publicWhere([{ slug: { equals: slug } }]),
+    ...(await bySlug(slug)),
     depth: 2,
     limit: 1,
     joins: {
@@ -235,7 +246,7 @@ export const getIdeas = cache(async (): Promise<Idea[]> => {
 
 export async function getIdea(slug: string) {
   const payload = await getClient()
-  const res = await payload.find({ collection: 'ideas', where: await publicWhere([{ slug: { equals: slug } }]), depth: 2, limit: 1 })
+  const res = await payload.find({ collection: 'ideas', ...(await bySlug(slug)), depth: 2, limit: 1 })
   return res.docs[0] ?? null
 }
 
@@ -256,7 +267,7 @@ export async function getReports(type?: ReportType) {
 
 export async function getReport(slug: string) {
   const payload = await getClient()
-  const res = await payload.find({ collection: 'reports', where: await publicWhere([{ slug: { equals: slug } }]), depth: 2, limit: 1 })
+  const res = await payload.find({ collection: 'reports', ...(await bySlug(slug)), depth: 2, limit: 1 })
   return res.docs[0] ?? null
 }
 
@@ -270,7 +281,7 @@ export const getAlbums = cache(async (): Promise<Album[]> => {
 
 export async function getAlbum(slug: string) {
   const payload = await getClient()
-  const res = await payload.find({ collection: 'albums', where: await publicWhere([{ slug: { equals: slug } }]), depth: 2, limit: 1 })
+  const res = await payload.find({ collection: 'albums', ...(await bySlug(slug)), depth: 2, limit: 1 })
   return res.docs[0] ?? null
 }
 
@@ -305,7 +316,7 @@ export async function searchSite(q: string): Promise<SearchHit[]> {
   return [
     ...news.docs.map((d) => ({ kind: 'Новость', title: d.title, href: `/news/${d.slug}`, excerpt: d.excerpt, date: d.publishedAt })),
     ...events.docs.map((d) => ({ kind: 'Событие', title: d.title, href: `/events/${d.slug}`, excerpt: d.summary, date: d.startsAt })),
-    ...promises.docs.map((d) => ({ kind: 'Обещание', title: d.title, href: `/promises/${d.slug}`, excerpt: d.summary })),
+    ...promises.docs.map((d) => ({ kind: 'Обещание', title: d.title, href: `/programme/${d.slug}`, excerpt: d.summary })),
     ...reports.docs.map((d) => ({ kind: 'Отчёт', title: d.title, href: `/reports/${d.slug}`, excerpt: d.summary, date: d.publishedAt })),
     ...ideas.docs.map((d) => ({ kind: 'Бюро идей', title: d.title, href: `/ideas/${d.slug}`, excerpt: d.summary })),
   ]

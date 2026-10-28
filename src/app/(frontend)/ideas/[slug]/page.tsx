@@ -72,7 +72,7 @@ export default async function IdeaPage({ params }: Props) {
             {photos.length ? <Lightbox items={photos} title={idea.title} /> : null}
           </div>
           <aside className="space-y-12">
-            <Related title="Связанные обещания" items={promises.map((p) => ({ href: `/promises/${p.slug}`, kind: 'Обещание', title: p.title, meta: <StatusBadge kind="promise" status={p.status} /> }))} />
+            <Related title="Связанные обещания" items={promises.map((p) => ({ href: `/programme/${p.slug}`, kind: 'Обещание', title: p.title, meta: <StatusBadge kind="promise" status={p.status} /> }))} />
             <Related title="События" items={events.map((e) => ({ href: `/events/${e.slug}`, kind: 'Событие', title: e.title, meta: <StatusBadge kind="event" status={effectiveEventStatus(e)} /> }))} />
             <div>
               <Link href="/ideas" className="label-wide-sm link-draw">

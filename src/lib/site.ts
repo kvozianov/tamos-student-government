@@ -6,18 +6,23 @@ export const siteUrl = () => (process.env.NEXT_PUBLIC_SITE_URL || 'http://localh
 const ROUTES = {
   news: '/news',
   events: '/events',
-  promises: '/promises',
+  promises: '/programme',
   ideas: '/ideas',
   reports: '/reports',
   gallery: '/gallery',
-  administration: '/administration',
+  administration: '/team',
 } as const
 
 export type RouteKey = keyof typeof ROUTES
 
 export const pathFor = (route: RouteKey, slug?: string | null) => (slug ? `${ROUTES[route]}/${slug}` : ROUTES[route])
 
-export const previewUrl = (route: RouteKey, slug?: string | null) => (slug ? `${siteUrl()}${pathFor(route, slug)}` : null)
+/** Только адреса внутри сайта: защищает от открытого редиректа на чужой домен. */
+export const safePath = (value: string | null) => (value && value.startsWith('/') && !value.startsWith('//') && !value.startsWith('/\\') ? value : '/')
+
+/** Кнопка «Предпросмотр» в панели: включает режим черновиков и открывает страницу материала. */
+export const previewUrl = (route: RouteKey, slug?: string | null) =>
+  slug ? `${siteUrl()}/next/preview?path=${encodeURIComponent(pathFor(route, slug))}` : null
 
 /** Коллекция Payload → публичный путь. Используется для внутренних ссылок в тексте. */
 export const COLLECTION_ROUTE: Record<string, RouteKey> = {

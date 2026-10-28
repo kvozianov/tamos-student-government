@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 import type { Setting } from '@/payload-types'
 import { asMedia, mediaUrl } from '@/lib/media'
@@ -91,9 +92,9 @@ export function Footer({ settings }: { settings: Setting }) {
               </a>
             </li>
             <li>
-              <a href="/admin" className="hover:text-ink">
+              <Link href="/admin" prefetch={false} className="hover:text-ink">
                 Вход для редакции
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

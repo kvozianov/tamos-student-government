@@ -31,7 +31,7 @@ type Props = { params: Promise<{ slug: string }> }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = await getPromise((await params).slug)
   if (!p) return { title: 'Обещание не найдено' }
-  return pageMeta({ title: p.title, description: p.summary, path: `/promises/${p.slug}` })
+  return pageMeta({ title: p.title, description: p.summary, path: `/programme/${p.slug}` })
 }
 
 export default async function PromisePage({ params }: Props) {
@@ -46,14 +46,14 @@ export default async function PromisePage({ params }: Props) {
 
   return (
     <article>
-      <PageHero title={p.title} lead={p.summary} crumbs={[{ label: 'Обещания', href: '/promises' }, { label: p.title }]} align="left" size="md">
+      <PageHero title={p.title} lead={p.summary} crumbs={[{ label: 'Программа', href: '/programme' }, { label: p.title }]} align="left" size="md">
         <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
           {p.number ? <span className="label-wide-sm text-ink">Пункт {p.number}</span> : null}
           <StatusBadge kind="promise" status={status} className="text-[12px]" />
           <NewBadge show={p.isNew} />
           <DemoBadge show={p.isDemo} />
           {category ? (
-            <SiteLink href={`/promises?category=${category.slug}`} className="label-wide-sm text-subtle hover:text-ink">
+            <SiteLink href={`/programme?category=${category.slug}`} className="label-wide-sm text-subtle hover:text-ink">
               Тема: {category.title}
             </SiteLink>
           ) : null}
@@ -138,7 +138,7 @@ export default async function PromisePage({ params }: Props) {
           <Related title="События" items={events.map((e) => ({ href: `/events/${e.slug}`, kind: 'Событие', title: e.title, meta: <StatusBadge kind="event" status={effectiveEventStatus(e)} /> }))} />
           <Related title="Новости" items={news.map((n) => ({ href: `/news/${n.slug}`, kind: formatDate(n.publishedAt), title: n.title }))} />
           <div>
-            <Link href="/promises" className="label-wide-sm link-draw">
+            <Link href="/programme" className="label-wide-sm link-draw">
               ← Все обещания
             </Link>
           </div>

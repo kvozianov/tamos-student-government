@@ -2,7 +2,7 @@
 
 import clsx from 'clsx'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 
 import { plural } from '@/lib/format'
 
@@ -45,6 +45,13 @@ function Digit({ value, reduce }: { value: string; reduce: boolean | null }) {
   )
 }
 
+const subscribeClock = (onTick: () => void) => {
+  const timer = setInterval(onTick, 1000)
+  return () => clearInterval(timer)
+}
+/** Время с точностью до секунды: в пределах секунды значение стабильно, как требует useSyncExternalStore. */
+const readClock = () => Math.floor(Date.now() / 1000) * 1000
+
 /**
  * Обратный отсчёт до начала мероприятия. Компонент рендерится только для утверждённых дат;
  * после начала показывает, что мероприятие идёт, а после окончания — что оно завершено.
@@ -53,17 +60,8 @@ export function Countdown({ startsAt, endsAt, size = 'lg', onDark = false, class
   const reduce = useReducedMotion()
   const start = new Date(startsAt).getTime()
   const end = endsAt ? new Date(endsAt).getTime() : start + 3 * 60 * 60 * 1000
-  const [now, setNow] = useState<number | null>(null)
-
-  useEffect(() => {
-    setNow(Date.now())
-    const timer = setInterval(() => {
-      const t = Date.now()
-      setNow(t)
-      if (t >= end) clearInterval(timer)
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [end])
+  // На сервере и при гидратации времени нет (null), в браузере часы тикают раз в секунду.
+  const now = useSyncExternalStore(subscribeClock, readClock, () => null)
 
   const tone = onDark ? 'text-white' : 'text-ink'
   const sub = onDark ? 'text-white/55' : 'text-subtle'

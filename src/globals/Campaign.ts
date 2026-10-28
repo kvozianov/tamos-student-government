@@ -59,7 +59,7 @@ export const Campaign: GlobalConfig = {
               fields: [
                 { name: 'title', type: 'text', label: 'Название', required: true },
                 { name: 'text', type: 'textarea', label: 'Описание' },
-                { name: 'href', type: 'text', label: 'Ссылка внутри сайта', admin: { placeholder: '/promises/...' } },
+                { name: 'href', type: 'text', label: 'Ссылка внутри сайта', admin: { placeholder: '/programme/...' } },
               ],
             },
           ],

@@ -30,6 +30,7 @@ export interface Config {
     members: Member;
     media: Media;
     documents: Document;
+    messages: Message;
     users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -59,6 +60,7 @@ export interface Config {
     members: MembersSelect<false> | MembersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     documents: DocumentsSelect<false> | DocumentsSelect<true>;
+    messages: MessagesSelect<false> | MessagesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -697,6 +699,25 @@ export interface Album {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Сообщения с формы на странице «Контакты». Отметьте статус, когда ответите.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "messages".
+ */
+export interface Message {
+  id: number;
+  subject: string;
+  name: string;
+  email: string;
+  grade?: string | null;
+  topic: 'question' | 'idea' | 'event' | 'complaint' | 'other';
+  message: string;
+  status: 'new' | 'in_progress' | 'answered';
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Доступ к панели управления. Администратор управляет всем, редактор работает только в выданных разделах.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -800,6 +821,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'documents';
         value: number | Document;
+      } | null)
+    | ({
+        relationTo: 'messages';
+        value: number | Message;
       } | null)
     | ({
         relationTo: 'users';
@@ -1192,6 +1217,22 @@ export interface DocumentsSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "messages_select".
+ */
+export interface MessagesSelect<T extends boolean = true> {
+  subject?: T;
+  name?: T;
+  email?: T;
+  grade?: T;
+  topic?: T;
+  message?: T;
+  status?: T;
+  note?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

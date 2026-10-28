@@ -14,11 +14,11 @@ const validateSignature = (value: string | null | undefined): true | string => {
 
 export const Members: CollectionConfig = {
   slug: 'members',
-  labels: { singular: 'Член администрации', plural: 'Администрация' },
+  labels: { singular: 'Член команды', plural: 'Команда' },
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'position', 'isPresident', 'isVicePresident', 'active', 'order', 'isDemo'],
-    group: 'Администрация',
+    group: 'Команда',
     preview: (doc) => previewUrl('administration', doc?.slug as string | undefined),
   },
   defaultSort: 'order',

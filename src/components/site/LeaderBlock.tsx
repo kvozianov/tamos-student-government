@@ -48,7 +48,7 @@ export function LeaderBlock({ member, eyebrow, reverse, priority, className }: P
             label={`Подпись: ${member.name}`}
             className="h-auto w-[260px] text-navy-950"
           />
-          <Link href={`/administration/${member.slug}`} className="label-wide link-draw mb-3">
+          <Link href={`/team/${member.slug}`} className="label-wide link-draw mb-3">
             Подробнее →
           </Link>
         </div>

@@ -1,7 +1,7 @@
 import { EVENT_STATUSES, NEWS_CATEGORIES, PROMISE_STATUSES, REPORT_TYPES } from './status'
 
 /**
- * Фильтры списков (/promises?status=…, /events?status=… и т. п.) без потери кэша.
+ * Фильтры списков (/programme?status=…, /events?status=… и т. п.) без потери кэша.
  *
  * Страница, которая читает searchParams, рендерится заново на каждый запрос. Поэтому страницы разделов
  * параметры не читают и отдаются из кэша (ISR), а запросы с фильтром next.config.ts переписывает (rewrites)
@@ -11,7 +11,7 @@ import { EVENT_STATUSES, NEWS_CATEGORIES, PROMISE_STATUSES, REPORT_TYPES } from 
  * Переписываются только допустимые значения. Остальные открывают раздел без фильтра, как и раньше.
  *
  * Важно: ссылки на списки с фильтром должны быть обычными <a>, а не next/link. Клиентский роутер Next
- * считает статичную /promises независимой от параметров адреса и показал бы её без фильтра, не спросив
+ * считает статичную /programme независимой от параметров адреса и показал бы её без фильтра, не спросив
  * сервер. Компонент SiteLink (src/components/site/SiteLink.tsx) выбирает нужный вариант сам.
  *
  * Файл импортируется из next.config.ts, поэтому импорты здесь только относительные.
@@ -42,9 +42,9 @@ export const filterRewrites: FilterRewrite[] = [
   { source: '/news', has: [param('category', oneOf(NEWS_CATEGORIES))], destination: '/filtered/news/:category/1' },
   { source: '/news', has: [param('page', PAGE)], destination: `/filtered/news/${ANY}/:page` },
 
-  { source: '/promises', has: [param('category', SLUG), param('status', oneOf(PROMISE_STATUSES))], destination: '/filtered/promises/:category/:status' },
-  { source: '/promises', has: [param('category', SLUG)], destination: `/filtered/promises/:category/${ANY}` },
-  { source: '/promises', has: [param('status', oneOf(PROMISE_STATUSES))], destination: `/filtered/promises/${ANY}/:status` },
+  { source: '/programme', has: [param('category', SLUG), param('status', oneOf(PROMISE_STATUSES))], destination: '/filtered/programme/:category/:status' },
+  { source: '/programme', has: [param('category', SLUG)], destination: `/filtered/programme/:category/${ANY}` },
+  { source: '/programme', has: [param('status', oneOf(PROMISE_STATUSES))], destination: `/filtered/programme/${ANY}/:status` },
 
   { source: '/events', has: [param('status', oneOf(EVENT_STATUSES))], destination: '/filtered/events/:status' },
   { source: '/reports', has: [param('type', oneOf(REPORT_TYPES))], destination: '/filtered/reports/:type' },

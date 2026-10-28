@@ -105,7 +105,7 @@ export default async function NewsArticle({ params }: Props) {
           />
           <Related
             title="Обещания"
-            items={promises.map((p) => ({ href: `/promises/${p.slug}`, kind: 'Обещание', title: p.title, meta: <StatusBadge kind="promise" status={p.status} /> }))}
+            items={promises.map((p) => ({ href: `/programme/${p.slug}`, kind: 'Обещание', title: p.title, meta: <StatusBadge kind="promise" status={p.status} /> }))}
           />
           <Related title="Бюро идей" items={ideas.map((i) => ({ href: `/ideas/${i.slug}`, kind: 'Проект', title: i.title }))} />
           <div>

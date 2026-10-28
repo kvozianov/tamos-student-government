@@ -1,21 +1,22 @@
 /** Структура навигации: основная строка меню и группы в раскрывающемся меню и подвале. */
 export const PRIMARY_NAV = [
-  { href: '/administration', label: 'Администрация' },
   { href: '/news', label: 'Новости' },
   { href: '/events', label: 'События' },
-  { href: '/promises', label: 'Обещания' },
+  { href: '/programme', label: 'Программа' },
+  { href: '/team', label: 'Команда' },
   { href: '/ideas', label: 'Бюро идей' },
   { href: '/gallery', label: 'Галерея' },
-  { href: '/campaign', label: 'Кампания' },
   { href: '/reports', label: 'Отчётность' },
+  { href: '/contact', label: 'Контакты' },
 ]
 
 export const NAV_GROUPS = [
   {
     title: 'Администрация',
     links: [
-      { href: '/administration', label: 'Президент и команда' },
+      { href: '/team', label: 'Президент и команда' },
       { href: '/campaign', label: 'Кампания' },
+      { href: '/contact', label: 'Контакты' },
     ],
   },
   {
@@ -30,7 +31,7 @@ export const NAV_GROUPS = [
     title: 'Деятельность',
     links: [
       { href: '/events', label: 'События' },
-      { href: '/promises', label: 'Обещания' },
+      { href: '/programme', label: 'Программа' },
       { href: '/ideas', label: 'Бюро идей' },
     ],
   },
@@ -38,7 +39,7 @@ export const NAV_GROUPS = [
     title: 'Прозрачность',
     links: [
       { href: '/reports', label: 'Отчётность' },
-      { href: '/promises#stats', label: 'Статистика обещаний' },
+      { href: '/programme#stats', label: 'Выполнение программы' },
       { href: '/search', label: 'Поиск по сайту' },
     ],
   },

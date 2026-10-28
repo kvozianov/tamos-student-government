@@ -45,9 +45,12 @@ export function Header({ shortName, descriptor, logoUrl, ticker, features }: Pro
     })
   }, [])
 
-  useEffect(() => {
+  // Переход на другую страницу закрывает меню и поиск.
+  const [panelPath, setPanelPath] = useState(pathname)
+  if (panelPath !== pathname) {
+    setPanelPath(pathname)
     setPanel(null)
-  }, [pathname])
+  }
 
   useEffect(() => {
     if (!panel) return

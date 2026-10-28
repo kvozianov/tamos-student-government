@@ -65,7 +65,7 @@ export async function ReportsView({ type: raw }: { type?: string }) {
                   {inProgress.map((p) => (
                     <li key={p.id} className="group relative border-b border-rule py-4">
                       <StatusBadge kind="promise" status={p.status} />
-                      <Link href={`/promises/${p.slug}`} className="mt-2 block font-serif text-[22px] leading-snug after:absolute after:inset-0 group-hover:underline">
+                      <Link href={`/programme/${p.slug}`} className="mt-2 block font-serif text-[22px] leading-snug after:absolute after:inset-0 group-hover:underline">
                         {p.title}
                       </Link>
                     </li>

@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from 'next'
+import { draftMode } from 'next/headers'
 import { Golos_Text, Oranienbaum, Unbounded } from 'next/font/google'
 
 import { Footer } from '@/components/site/Footer'
 import { Header, type NavFeature } from '@/components/site/Header'
+import { PreviewBar } from '@/components/site/PreviewBar'
 import { Providers } from '@/components/site/Providers'
 import { getLatestNews, getSettings, getUpcomingEvents } from '@/lib/data'
 import { formatDate } from '@/lib/format'
@@ -23,7 +25,7 @@ const DEFAULT_TICKER = [
   { text: 'Официальный портал президентской администрации TAMOS', href: null },
   { text: 'Новости и заявления', href: '/news' },
   { text: 'Ближайшие события', href: '/events' },
-  { text: 'Публичное отслеживание обещаний', href: '/promises' },
+  { text: 'Выполнение предвыборной программы', href: '/programme' },
   { text: 'Бюро идей', href: '/ideas' },
   { text: 'Отчётность', href: '/reports' },
 ]
@@ -52,7 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export const viewport: Viewport = { themeColor: '#060c1f', width: 'device-width', initialScale: 1 }
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const [settings, latest, upcoming] = await Promise.all([getSettings(), getLatestNews(1), getUpcomingEvents(1)])
+  const [settings, latest, upcoming, draft] = await Promise.all([getSettings(), getLatestNews(1), getUpcomingEvents(1), draftMode()])
   const features: NavFeature[] = []
   if (latest[0]) {
     features.push({ kind: 'Последняя новость', title: latest[0].title, href: `/news/${latest[0].slug}`, image: mediaUrl(asMedia(latest[0].cover), 'card'), meta: formatDate(latest[0].publishedAt) })
@@ -78,6 +80,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <Providers>
+          {draft.isEnabled ? <PreviewBar /> : null}
           <Header
             shortName={settings.shortName}
             descriptor={settings.descriptor ?? 'Президентская администрация'}

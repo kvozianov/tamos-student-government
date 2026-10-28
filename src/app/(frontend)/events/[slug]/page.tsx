@@ -224,7 +224,7 @@ export default async function EventPage({ params }: Props) {
               <ul className="space-y-2 text-[16px]">
                 {organizers.map((m) => (
                   <li key={m.id}>
-                    <Link href={`/administration/${m.slug}`} className="link-draw">
+                    <Link href={`/team/${m.slug}`} className="link-draw">
                       {m.name}
                     </Link>
                     <span className="block text-[14px] text-muted">{m.position}</span>
@@ -235,7 +235,7 @@ export default async function EventPage({ params }: Props) {
             </section>
           ) : null}
 
-          <Related title="Связанные обещания" items={promises.map((p) => ({ href: `/promises/${p.slug}`, kind: 'Обещание', title: p.title, meta: <StatusBadge kind="promise" status={p.status} /> }))} />
+          <Related title="Связанные обещания" items={promises.map((p) => ({ href: `/programme/${p.slug}`, kind: 'Обещание', title: p.title, meta: <StatusBadge kind="promise" status={p.status} /> }))} />
           <Related title="Новости" items={news.map((n) => ({ href: `/news/${n.slug}`, kind: formatDate(n.publishedAt), title: n.title }))} />
           <Related title="Отчёты" items={reports.map((r) => ({ href: `/reports/${r.slug}`, kind: formatDate(r.publishedAt), title: r.title }))} />
           <Related title="Фото и видео" items={albums.map((a) => ({ href: `/gallery/${a.slug}`, kind: 'Альбом', title: a.title }))} />

@@ -25,7 +25,7 @@ type Props = { params: Promise<{ slug: string }> }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const m = await getMember((await params).slug)
   if (!m) return { title: 'Страница не найдена' }
-  return pageMeta({ title: m.name, description: m.shortBio ?? m.position, image: m.photo, path: `/administration/${m.slug}` })
+  return pageMeta({ title: m.name, description: m.shortBio ?? m.position, image: m.photo, path: `/team/${m.slug}` })
 }
 
 export default async function MemberPage({ params }: Props) {
@@ -40,7 +40,7 @@ export default async function MemberPage({ params }: Props) {
     }
     if (p.relationTo === 'promises') {
       const pr = v as PromiseDoc
-      return pr._status === 'published' ? [{ href: `/promises/${pr.slug}`, kind: 'Обещание', title: pr.title, meta: <StatusBadge kind="promise" status={pr.status} /> }] : []
+      return pr._status === 'published' ? [{ href: `/programme/${pr.slug}`, kind: 'Обещание', title: pr.title, meta: <StatusBadge kind="promise" status={pr.status} /> }] : []
     }
     const i = v as Idea
     return i._status === 'published' ? [{ href: `/ideas/${i.slug}`, kind: 'Бюро идей', title: i.title }] : []
@@ -48,7 +48,7 @@ export default async function MemberPage({ params }: Props) {
 
   return (
     <article>
-      <PageHero title={m.name} eyebrow={m.position} crumbs={[{ label: 'Администрация', href: '/administration' }, { label: m.name }]} size="md" />
+      <PageHero title={m.name} eyebrow={m.position} crumbs={[{ label: 'Команда', href: '/team' }, { label: m.name }]} size="md" />
       <div className="container-site grid gap-14 py-14 md:grid-cols-[minmax(0,360px)_1fr] md:py-20 lg:gap-20">
         <div className="space-y-8">
           <MediaImage media={m.photo} size="card" className="aspect-[4/5]" sizes="360px" priority placeholderLabel="Портрет будет добавлен" />
@@ -124,7 +124,7 @@ export default async function MemberPage({ params }: Props) {
             <Signature shape={parseSignature(m.signatureSvg)} fallback={Boolean(m.isPresident)} trigger="view" label={`Подпись: ${m.name}`} className="h-auto w-[240px] text-navy-950" />
           ) : null}
           <div>
-            <Link href="/administration" className="label-wide-sm link-draw">
+            <Link href="/team" className="label-wide-sm link-draw">
               ← Вся администрация
             </Link>
           </div>

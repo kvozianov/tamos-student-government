@@ -20,6 +20,8 @@ const nextConfig: NextConfig = {
   // а новая собирается в фоне. Копию старше часа не отдаём: после долгого простоя первый посетитель дождётся
   // свежей сборки, и статусы событий никогда не отстают больше чем на час. Подробнее — README, раздел «Кэш».
   expireTime: 3600,
+  // Шрифты для картинок соцсетей (src/lib/og.tsx) читаются с диска во время запроса.
+  outputFileTracingIncludes: { '/**': ['./src/assets/fonts/**'] },
   images: {
     localPatterns: [{ pathname: '/api/media/file/**' }],
     remotePatterns: [{ protocol: 'https', hostname: '*.public.blob.vercel-storage.com' }],
@@ -27,6 +29,13 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }]
+  },
+  async redirects() {
+    // Прежние адреса разделов: «Администрация» стала «Командой», «Обещания» — «Программой».
+    return [
+      { source: '/administration/:path*', destination: '/team/:path*', permanent: true },
+      { source: '/promises/:path*', destination: '/programme/:path*', permanent: true },
+    ]
   },
   async rewrites() {
     // Фильтры списков ведут на кэшируемые служебные страницы, см. src/lib/filters.ts.

@@ -11,13 +11,13 @@ import { LeaderBlock } from '@/components/site/LeaderBlock'
 import { getHome, getPresident, getTeam, getVicePresident } from '@/lib/data'
 import { pageMeta } from '@/lib/meta'
 
-export const metadata: Metadata = pageMeta({ title: 'Администрация', description: 'Президент, вице-президент и команда президентской администрации TAMOS: должности, направления ответственности и биографии.', path: '/administration' })
+export const metadata: Metadata = pageMeta({ title: 'Команда', description: 'Президент, вице-президент и команда президентской администрации TAMOS: должности, направления ответственности и биографии.', path: '/team' })
 
 export default async function AdministrationPage() {
   const [president, vicePresident, team, home] = await Promise.all([getPresident(), getVicePresident(), getTeam(), getHome()])
   return (
     <>
-      <PageHero title="Администрация" crumbs={[{ label: 'Администрация' }]} />
+      <PageHero title="Команда" crumbs={[{ label: 'Команда' }]} />
 
       {president ? (
         <section className="py-16 md:py-24" aria-label="Президент">
@@ -59,7 +59,7 @@ export default async function AdministrationPage() {
                   <MediaImage media={m.photo} size="thumbnail" className="aspect-[4/5] w-[160px] md:w-[200px]" sizes="200px" placeholderLabel="Портрет" />
                   <div className="self-center">
                     <h3 className="font-serif text-[32px] leading-tight md:text-[38px]">
-                      <Link href={`/administration/${m.slug}`} className="after:absolute after:inset-0 group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4">
+                      <Link href={`/team/${m.slug}`} className="after:absolute after:inset-0 group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4">
                         {m.name}
                       </Link>
                     </h3>

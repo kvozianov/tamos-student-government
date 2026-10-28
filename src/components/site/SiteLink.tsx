@@ -4,7 +4,7 @@ import type { ComponentProps } from 'react'
 import { isFilteredListHref } from '@/lib/filters'
 
 /**
- * Ссылка сайта: next/link для обычных адресов и простой <a> для списков с фильтром (/promises?status=…).
+ * Ссылка сайта: next/link для обычных адресов и простой <a> для списков с фильтром (/programme?status=…).
  * Списки с фильтром отдаются из кэша через rewrites, а клиентский роутер Next о них не знает и показал бы
  * раздел без фильтра. Обычный переход берёт страницу из кэша CDN, поэтому остаётся быстрым. См. src/lib/filters.ts.
  */

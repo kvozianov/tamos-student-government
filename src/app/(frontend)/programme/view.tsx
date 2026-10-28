@@ -13,14 +13,14 @@ import { doc } from '@/lib/rel'
 import { PROMISE_STATUSES, type PromiseStatus } from '@/lib/status'
 
 export const promisesMeta: Metadata = pageMeta({
-  title: 'Обещания',
+  title: 'Программа',
   description: 'Публичное отслеживание обещаний администрации TAMOS: статус каждого пункта программы, история изменений и подтверждающие материалы.',
-  path: '/promises',
+  path: '/programme',
 })
 
 export type PromisesFilter = { category?: string; status?: string }
 
-/** Страница «Обещания». Фильтры приходят из адреса: /promises?category=…&status=… (см. rewrites в next.config.ts). */
+/** Страница «Программа». Фильтры приходят из адреса: /programme?category=…&status=… (см. rewrites в next.config.ts). */
 export async function PromisesView(sp: PromisesFilter) {
   const [promises, categories] = await Promise.all([getPromises(), getCategories()])
   const stats = computePromiseStats(promises)
@@ -36,7 +36,7 @@ export async function PromisesView(sp: PromisesFilter) {
     if (s) u.set('status', s)
     const str = u.toString()
     // Фильтр открывается обычным переходом (см. SiteLink), якорь возвращает читателя к списку.
-    return str ? `/promises?${str}#filters` : '/promises#filters'
+    return str ? `/programme?${str}#filters` : '/programme#filters'
   }
   const usedCategories = categories.filter((c) => promises.some((p) => doc<Category>(p.category)?.id === c.id))
   const categoryTabs = [
@@ -60,9 +60,9 @@ export async function PromisesView(sp: PromisesFilter) {
   return (
     <>
       <PageHero
-        title="Обещания"
+        title="Программа"
         lead="Это не перечень достижений, а система публичного контроля. Каждое обещание получает статус только по фактам, а каждое изменение — дату и объяснение."
-        crumbs={[{ label: 'Обещания' }]}
+        crumbs={[{ label: 'Программа' }]}
       />
 
       <section id="stats" className="border-b border-rule bg-paper py-14 md:py-16" aria-label="Статистика выполнения">
