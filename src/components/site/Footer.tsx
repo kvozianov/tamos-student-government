@@ -77,9 +77,17 @@ export function Footer({ settings }: { settings: Setting }) {
       </div>
       <div className="border-t border-rule">
         <div className="container-site flex flex-col gap-4 py-6 text-[13px] text-subtle md:flex-row md:items-center md:justify-between">
-          <p>
-            © {year} {settings.siteName}. Официальный сайт.
-          </p>
+          <div className="space-y-1">
+            <p>
+              © {year} {settings.siteName}. Официальный сайт.
+            </p>
+            <p>
+              Разработка —{' '}
+              <a href="https://github.com/kvozianov" target="_blank" rel="noopener noreferrer" className="link-draw text-ink">
+                Кирилл Возьянов<span className="sr-only"> (GitHub, откроется в новой вкладке)</span> ↗
+              </a>
+            </p>
+          </div>
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
             <li>
               <SiteLink href="/search" className="hover:text-ink">
