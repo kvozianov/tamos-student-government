@@ -43,7 +43,7 @@ export function PromiseStats({ stats, onDark, compact }: { stats: Stats; onDark?
             {ORDER.map((k) => (
               <li key={k} className="flex items-center gap-2">
                 <span aria-hidden="true" className={clsx('size-[7px]', TONE_BG[PROMISE_STATUSES[k].tone])} />
-                {PROMISE_STATUSES[k].label} <span className="tabular-nums opacity-70">{stats.byStatus[k]}</span>
+                {PROMISE_STATUSES[k].label} <span className="font-medium tabular-nums">{stats.byStatus[k]}</span>
               </li>
             ))}
           </ul>

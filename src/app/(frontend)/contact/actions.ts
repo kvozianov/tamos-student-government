@@ -7,10 +7,6 @@ import { validateContact, type ContactState, type MessageTopic } from '@/lib/con
 
 /** Обращение с формы «Контакты»: проверка, защита от ботов и запись в коллекцию messages. */
 export async function sendMessage(_prev: ContactState, form: FormData): Promise<ContactState> {
-  // Ловушки для ботов: скрытое поле должно остаться пустым, а форма — провисеть на странице хотя бы 3 секунды.
-  const startedAt = Number(form.get('startedAt'))
-  if (form.get('website') || !startedAt || Date.now() - startedAt < 3000) return { status: 'ok' }
-
   const result = validateContact({
     name: String(form.get('name') ?? ''),
     email: String(form.get('email') ?? ''),
@@ -20,6 +16,11 @@ export async function sendMessage(_prev: ContactState, form: FormData): Promise<
     message: String(form.get('message') ?? ''),
   })
   if (!result.ok) return { status: 'error', errors: result.errors, values: result.values }
+
+  // Ловушки для ботов: скрытое поле должно остаться пустым, а форма — провисеть на странице хотя бы 3 секунды.
+  // Бот получает обычный ответ об успехе, но в базу ничего не пишется.
+  const startedAt = Number(form.get('startedAt'))
+  if (form.get('website') || !startedAt || Date.now() - startedAt < 3000) return { status: 'ok' }
 
   const payload = await getClient()
   try {

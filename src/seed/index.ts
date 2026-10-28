@@ -1,7 +1,7 @@
 /**
  * Начальное наполнение базы. Запуск: npm run seed
  *
- * Переносит события и обещания из прежней статической версии сайта (legacy/andrewmetr-static/data/content.js),
+ * Переносит события и обещания из архива кампании (src/seed/data/campaign-content.js, данные прежнего статического сайта),
  * создаёт учётные записи из .env и демонстрационные материалы. Все примеры отмечены «Демо-материал»,
  * их можно скрыть в настройках сайта и удалить командой npm run demo:clear.
  */
@@ -60,7 +60,7 @@ const local = (date: string, time?: string) => {
 }
 
 function readLegacy() {
-  const file = path.join(ROOT, 'legacy/andrewmetr-static/data/content.js')
+  const file = path.join(ROOT, 'src/seed/data/campaign-content.js')
   const sandbox: { window: { CONTENT?: { promises: LegacyPromise[]; events: LegacyEvent[] } } } = { window: {} }
   vm.runInNewContext(fs.readFileSync(file, 'utf8'), sandbox)
   if (!sandbox.window.CONTENT) throw new Error('Не удалось прочитать данные прежнего сайта')

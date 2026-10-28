@@ -27,7 +27,7 @@ export function FilterTabs({ tabs, label, onDark = false, align = 'center' }: { 
               )}
             >
               {t.label}
-              {typeof t.count === 'number' ? <span className={clsx('tabular-nums', t.active ? 'opacity-70' : 'opacity-50')}>{t.count}</span> : null}
+              {typeof t.count === 'number' ? <span className={clsx('tabular-nums', t.active ? 'opacity-80' : onDark ? 'text-white/70' : 'text-subtle')}>{t.count}</span> : null}
             </SiteLink>
           </li>
         ))}

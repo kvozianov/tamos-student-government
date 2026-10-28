@@ -34,7 +34,7 @@ async function publicWhere(parts: (Where | null | undefined | false)[], { drafts
 async function bySlug(slug: string): Promise<{ where: Where; draft: boolean }> {
   const { isEnabled } = await draftMode()
   if (isEnabled) return { where: { slug: { equals: slug } }, draft: true }
-  return { ...(await bySlug(slug)), draft: false }
+  return { where: await publicWhere([{ slug: { equals: slug } }]), draft: false }
 }
 
 /* ---------- Администрация ---------- */

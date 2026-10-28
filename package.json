@@ -1,8 +1,8 @@
 {
-  "name": "tamos-administration",
+  "name": "tamos-student-government",
   "version": "1.0.0",
   "private": true,
-  "description": "Официальный портал президентской администрации TAMOS: Next.js + Payload CMS + PostgreSQL",
+  "description": "TAMOS Student Government website: news, events, programme tracker and an admin panel. Next.js + Payload CMS + PostgreSQL.",
   "type": "module",
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=6144\" next dev",
@@ -19,7 +19,13 @@
     "typecheck": "tsc --noEmit",
     "signature": "node scripts/trace-signature.mjs && tsx --env-file-if-exists=.env src/seed/apply-signature.ts",
     "program": "tsx --env-file-if-exists=.env src/seed/program.ts",
-    "leadership": "tsx --env-file-if-exists=.env src/seed/leadership.ts"
+    "leadership": "tsx --env-file-if-exists=.env src/seed/leadership.ts",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "create-admin": "tsx --env-file-if-exists=.env src/seed/create-admin.ts",
+    "team": "tsx --env-file-if-exists=.env src/seed/team.ts",
+    "seed:all": "npm run seed && npm run program && npm run leadership && npm run team"
   },
   "engines": {
     "node": ">=20.18.1"
@@ -55,5 +61,7 @@
     "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "vitest": "^5.0.5"
-  }
+  },
+  "author": "Kirill Vozianov",
+  "license": "MIT"
 }

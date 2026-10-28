@@ -106,10 +106,11 @@ export function Header({ shortName, descriptor, logoUrl, ticker, features }: Pro
                   <span className={clsx('absolute left-0 block h-[1.5px] w-5 bg-current transition-transform duration-300', panel === 'menu' ? 'top-[5px] -rotate-45' : 'top-[9px]')} />
                 </span>
                 <span className="hidden sm:inline">{panel === 'menu' ? 'Закрыть' : 'Меню'}</span>
+                <span className="sr-only sm:hidden">{panel === 'menu' ? 'Закрыть меню' : 'Меню'}</span>
               </button>
             </div>
 
-            <SiteLink href="/" className="flex items-center gap-3" aria-label={`${shortName} — ${descriptor}. На главную`}>
+            <SiteLink href="/" className="flex items-center gap-3">
               {logoUrl ? (
                 <Image src={logoUrl} alt="" width={40} height={40} className="size-9 object-contain md:size-10" />
               ) : (
@@ -118,6 +119,7 @@ export function Header({ shortName, descriptor, logoUrl, ticker, features }: Pro
               <span className="flex flex-col leading-none">
                 <span className="font-serif text-[23px] tracking-[0.14em] md:text-[26px]">{shortName}</span>
                 <span className="label-wide-sm mt-1 hidden text-[8.5px] opacity-75 sm:block">{descriptor}</span>
+                <span className="sr-only"> — на главную</span>
               </span>
             </SiteLink>
 

@@ -69,7 +69,7 @@ export function EventsCalendar({ events, initialMonth, today }: { events: Calend
                     <div
                       className={clsx(
                         'flex h-14 flex-col items-center justify-start gap-1 pt-2 md:h-20',
-                        !d.inMonth && 'text-subtle/60',
+                        !d.inMonth && 'bg-mist text-subtle',
                         d.key === today && 'bg-sky-100',
                       )}
                     >

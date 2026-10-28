@@ -7,10 +7,13 @@ export const OG_SIZE = { width: 1200, height: 630 }
 
 const fonts = async () => {
   const dir = join(process.cwd(), 'src/assets/fonts')
-  const [serif, sans] = await Promise.all([readFile(join(dir, 'Oranienbaum-Regular.ttf')), readFile(join(dir, 'GolosText.ttf'))])
+  const [serif, cyrillic, latin] = await Promise.all(
+    ['Oranienbaum-Regular.ttf', 'golos-text-cyrillic-500.woff', 'golos-text-latin-500.woff'].map((f) => readFile(join(dir, f))),
+  )
   return [
     { name: 'Oranienbaum', data: serif, weight: 400 as const, style: 'normal' as const },
-    { name: 'Golos', data: sans, weight: 400 as const, style: 'normal' as const },
+    { name: 'Golos', data: cyrillic, weight: 500 as const, style: 'normal' as const },
+    { name: 'Golos', data: latin, weight: 500 as const, style: 'normal' as const },
   ]
 }
 

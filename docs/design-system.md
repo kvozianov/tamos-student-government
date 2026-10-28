@@ -18,7 +18,9 @@ All tokens live in `src/app/(frontend)/globals.css` (`@theme`) and are used thro
 | Rule | `rule` | `#DFE2E8` | Hairlines and card borders |
 | Text | `ink` | `#111827` | Body text and headlines |
 | Text, secondary | `muted` | `#4F5666` | Leads, excerpts, metadata (7.4:1 on white) |
-| Text, tertiary | `subtle` | `#6B7280` | Captions and section labels (4.8:1 on white) |
+| Text, tertiary | `subtle` | `#5F6673` | Captions and section labels (5.8:1 on white, 5.3:1 on mist) |
+
+The `brass` tone (`#7A5F2E`, 5.5:1 on mist) is reserved for the "Demo" badge on sample content.
 
 Status colours (`tone-*`) are reserved for status badges of events and programme items: neutral, review, approved, progress, soon, done, partial, negative. Each one passes WCAG AA as text on white.
 
