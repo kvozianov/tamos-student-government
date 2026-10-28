@@ -22,3 +22,4 @@ ADMIN_ACCESS.md
 /blob-report
 /playwright/.cache
 /coverage
+!.env.example
