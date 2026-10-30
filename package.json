@@ -8,7 +8,7 @@
     "dev": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=6144\" next dev",
     "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
-    "ci": "cross-env NODE_OPTIONS=--no-deprecation payload migrate && npm run build",
+    "ci": "if [ \"$VERCEL_ENV\" != preview ]; then npm run migrate; fi && npm run build",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",

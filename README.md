@@ -112,7 +112,7 @@ The smoke suite covers the home page, a news article, the events calendar, the c
 
 ## Deployment on Vercel
 
-The production build runs migrations first (`npm run ci`, set in `vercel.json`).
+The production build runs migrations first (`npm run ci`, set in `vercel.json`). Preview builds skip migrations, so an unmerged pull request never changes the production schema.
 
 1. Create a Postgres database (Neon through the Vercel Marketplace) and a Vercel Blob store; both inject their variables into the project.
 2. Add `PAYLOAD_SECRET` (`openssl rand -hex 32`), `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_SITE_TIMEZONE=Asia/Almaty`.
