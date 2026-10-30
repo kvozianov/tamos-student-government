@@ -29,9 +29,13 @@ services:
     ports:
       - '${PORT:-3000}:3000'
     volumes:
-      # Uploaded photos and documents when Vercel Blob is not configured
-      - ./media:/app/media
-      - ./documents:/app/documents
+      # Uploaded photos and documents when Vercel Blob is not configured. Named volumes take their
+      # ownership from the image, so the unprivileged "node" user can write to them. To bring in files
+      # from an older setup with ./media and ./documents folders: docker compose cp ./media/. app:/app/media
+      - media:/app/media
+      - documents:/app/documents
 
 volumes:
   pgdata:
+  media:
+  documents:
