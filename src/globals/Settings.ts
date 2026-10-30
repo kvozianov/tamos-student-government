@@ -1,7 +1,8 @@
 import type { GlobalConfig } from 'payload'
 
 import { isAdmin } from '@/access'
-import { urlField } from '@/fields/common'
+import { linkField, urlField } from '@/fields/common'
+import { limitPublicGlobalQueries } from '@/hooks/limit-queries'
 import { revalidateGlobal } from '@/hooks/revalidate'
 
 export const Settings: GlobalConfig = {
@@ -9,7 +10,7 @@ export const Settings: GlobalConfig = {
   label: 'Настройки сайта',
   admin: { group: 'Система', description: 'Название, ссылки, форма Бюро идей и показ демо-материалов. Доступно только администратору.' },
   access: { read: () => true, update: isAdmin },
-  hooks: revalidateGlobal,
+  hooks: { ...revalidateGlobal, beforeOperation: [limitPublicGlobalQueries] },
   fields: [
     {
       type: 'tabs',
@@ -36,7 +37,7 @@ export const Settings: GlobalConfig = {
               maxRows: 6,
               fields: [
                 { name: 'text', type: 'text', label: 'Текст', required: true },
-                { name: 'href', type: 'text', label: 'Ссылка внутри сайта', admin: { placeholder: '/events' } },
+                linkField('href', 'Ссылка', '/events'),
               ],
             },
           ],

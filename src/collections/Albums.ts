@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { canManage, isAdmin, publishedOrStaff } from '@/access'
 import { demoField, slugField, urlField } from '@/fields/common'
+import { limitPublicQueries } from '@/hooks/limit-queries'
 import { revalidateCollection } from '@/hooks/revalidate'
 import { previewUrl } from '@/lib/site'
 
@@ -17,7 +18,7 @@ export const Albums: CollectionConfig = {
   defaultSort: '-date',
   versions: { drafts: true, maxPerDoc: 20 },
   access: { read: publishedOrStaff, create: canManage('albums'), update: canManage('albums'), delete: isAdmin },
-  hooks: revalidateCollection,
+  hooks: { ...revalidateCollection, beforeOperation: [limitPublicQueries] },
   fields: [
     { name: 'title', type: 'text', label: 'Название альбома', required: true },
     {

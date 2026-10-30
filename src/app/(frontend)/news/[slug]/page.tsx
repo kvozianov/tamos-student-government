@@ -16,6 +16,7 @@ import { getNewsItem, getNewsList } from '@/lib/data'
 import { effectiveEventStatus } from '@/lib/events'
 import { formatDate } from '@/lib/format'
 import { mediaListToGallery } from '@/lib/gallery'
+import { jsonLdHtml } from '@/lib/json-ld'
 import { asMedia, mediaUrl } from '@/lib/media'
 import { pageMeta } from '@/lib/meta'
 import { docs } from '@/lib/rel'
@@ -128,7 +129,7 @@ export default async function NewsArticle({ params }: Props) {
           </div>
         </section>
       ) : null}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(jsonLd) }} />
     </article>
   )
 }

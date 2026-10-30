@@ -12,6 +12,7 @@ import type { Album, Member, Promise as PromiseDoc } from '@/payload-types'
 import { getCampaign, getPromises } from '@/lib/data'
 import { pageMeta } from '@/lib/meta'
 import { docs } from '@/lib/rel'
+import { safeHref } from '@/lib/site'
 
 export async function generateMetadata(): Promise<Metadata> {
   const c = await getCampaign()
@@ -121,18 +122,21 @@ export default async function CampaignPage() {
               <div className="mt-14">
                 <h3 className="label-wide mb-5 text-subtle">Ключевые инициативы</h3>
                 <ul className="grid gap-8 sm:grid-cols-2">
-                  {c.initiatives.map((it, i) => (
-                    <li key={it.id ?? i} className="border-t border-rule pt-4">
-                      {it.href ? (
-                        <Link href={it.href} className="font-serif text-[24px] leading-tight hover:underline">
-                          {it.title}
-                        </Link>
-                      ) : (
-                        <p className="font-serif text-[24px] leading-tight">{it.title}</p>
-                      )}
-                      {it.text ? <p className="mt-2 text-[15px] text-muted">{it.text}</p> : null}
-                    </li>
-                  ))}
+                  {c.initiatives.map((it, i) => {
+                    const href = safeHref(it.href)
+                    return (
+                      <li key={it.id ?? i} className="border-t border-rule pt-4">
+                        {href ? (
+                          <Link href={href} className="font-serif text-[24px] leading-tight hover:underline">
+                            {it.title}
+                          </Link>
+                        ) : (
+                          <p className="font-serif text-[24px] leading-tight">{it.title}</p>
+                        )}
+                        {it.text ? <p className="mt-2 text-[15px] text-muted">{it.text}</p> : null}
+                      </li>
+                    )
+                  })}
                 </ul>
               </div>
             ) : null}

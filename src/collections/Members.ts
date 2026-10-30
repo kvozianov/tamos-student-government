@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { canManage, isAdmin } from '@/access'
 import { demoField, slugField } from '@/fields/common'
 import { editor } from '@/fields/richText'
+import { limitPublicQueries } from '@/hooks/limit-queries'
 import { revalidateCollection } from '@/hooks/revalidate'
 import { previewUrl } from '@/lib/site'
 import { parseSignature } from '@/lib/signature'
@@ -30,6 +31,7 @@ export const Members: CollectionConfig = {
   },
   hooks: {
     ...revalidateCollection,
+    beforeOperation: [limitPublicQueries],
     beforeChange: [
       async ({ data, req, originalDoc }) => {
         // Президент и вице-президент могут быть только одни: снимаем отметку с предыдущего.

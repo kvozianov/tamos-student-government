@@ -714,6 +714,7 @@ export interface Message {
   message: string;
   status: 'new' | 'in_progress' | 'answered';
   note?: string | null;
+  clientKey?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1231,6 +1232,7 @@ export interface MessagesSelect<T extends boolean = true> {
   message?: T;
   status?: T;
   note?: T;
+  clientKey?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1440,6 +1442,9 @@ export interface Campaign {
     | {
         title: string;
         text?: string | null;
+        /**
+         * Путь внутри сайта, например /events, или полный адрес https://…
+         */
         href?: string | null;
         id?: string | null;
       }[]
@@ -1506,6 +1511,9 @@ export interface Setting {
   ticker?:
     | {
         text: string;
+        /**
+         * Путь внутри сайта, например /events, или полный адрес https://…
+         */
         href?: string | null;
         id?: string | null;
       }[]

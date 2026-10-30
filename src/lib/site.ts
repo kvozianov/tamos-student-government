@@ -20,6 +20,21 @@ export const pathFor = (route: RouteKey, slug?: string | null) => (slug ? `${ROU
 /** Только адреса внутри сайта: защищает от открытого редиректа на чужой домен. */
 export const safePath = (value: string | null) => (value && value.startsWith('/') && !value.startsWith('//') && !value.startsWith('/\\') ? value : '/')
 
+/**
+ * Ссылка из CMS (бегущая строка, инициативы кампании): путь внутри сайта или полный адрес http(s).
+ * Всё остальное — javascript:, //чужой-домен, адреса с пробелами — отбрасывается, возвращается null.
+ */
+export const safeHref = (value: string | null | undefined): string | null => {
+  if (!value || /[\s\\]/.test(value)) return null
+  if (value.startsWith('/')) return safePath(value) === value ? value : null
+  try {
+    const url = new URL(value)
+    return url.protocol === 'https:' || url.protocol === 'http:' ? value : null
+  } catch {
+    return null
+  }
+}
+
 /** Кнопка «Предпросмотр» в панели: включает режим черновиков и открывает страницу материала. */
 export const previewUrl = (route: RouteKey, slug?: string | null) =>
   slug ? `${siteUrl()}/next/preview?path=${encodeURIComponent(pathFor(route, slug))}` : null

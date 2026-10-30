@@ -2,6 +2,7 @@ import type { GlobalConfig } from 'payload'
 
 import { canManage } from '@/access'
 import { editor } from '@/fields/richText'
+import { limitPublicGlobalQueries } from '@/hooks/limit-queries'
 import { revalidateGlobal } from '@/hooks/revalidate'
 
 export const Home: GlobalConfig = {
@@ -9,7 +10,7 @@ export const Home: GlobalConfig = {
   label: 'Главная страница',
   admin: { group: 'Страницы', description: 'Тексты первого экрана и обращения. Новости, события и обещания подтягиваются автоматически.' },
   access: { read: () => true, update: canManage('home') },
-  hooks: revalidateGlobal,
+  hooks: { ...revalidateGlobal, beforeOperation: [limitPublicGlobalQueries] },
   fields: [
     {
       type: 'tabs',

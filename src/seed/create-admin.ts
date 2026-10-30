@@ -9,6 +9,8 @@
 import config from '@payload-config'
 import { getPayload } from 'payload'
 
+import { passwordProblem } from '@/lib/password'
+
 const email = process.env.ADMIN_EMAIL?.trim().toLowerCase()
 const password = process.env.ADMIN_PASSWORD
 const name = process.env.ADMIN_NAME?.trim() || 'Администратор'
@@ -17,8 +19,9 @@ if (!email || !password) {
   console.error('Задайте ADMIN_EMAIL и ADMIN_PASSWORD')
   process.exit(1)
 }
-if (password.length < 12) {
-  console.error('Пароль должен быть не короче 12 символов')
+const problem = passwordProblem(password)
+if (problem) {
+  console.error(problem)
   process.exit(1)
 }
 

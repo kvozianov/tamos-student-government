@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { canManage, isAdmin, publishedOrStaff } from '@/access'
 import { demoField, slugField, urlField } from '@/fields/common'
 import { editor } from '@/fields/richText'
+import { limitPublicQueries } from '@/hooks/limit-queries'
 import { revalidateCollection } from '@/hooks/revalidate'
 import { NEWS_CATEGORIES, toOptions } from '@/lib/status'
 import { previewUrl } from '@/lib/site'
@@ -20,7 +21,7 @@ export const News: CollectionConfig = {
   defaultSort: '-publishedAt',
   versions: { drafts: true, maxPerDoc: 30 },
   access: { read: publishedOrStaff, create: canManage('news'), update: canManage('news'), delete: isAdmin },
-  hooks: revalidateCollection,
+  hooks: { ...revalidateCollection, beforeOperation: [limitPublicQueries] },
   fields: [
     { name: 'title', type: 'text', label: 'Заголовок', required: true },
     {

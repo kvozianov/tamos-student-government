@@ -24,6 +24,37 @@ test.describe('admin panel', () => {
     await page.close()
   })
 
+  test('login page has no password recovery link', async ({ browser }) => {
+    const page = await browser.newPage()
+    await page.goto('/admin/login')
+    await expect(page.locator('#field-email')).toBeVisible()
+    await expect(page.getByRole('link', { name: /забыли пароль/i })).toBeHidden()
+    await expect(page.getByText('Обратитесь к администратору сайта')).toBeVisible()
+    await page.close()
+  })
+
+  test('signed-in staff get the access map and account guards work', async ({ page }) => {
+    // Запросы из самой страницы: Payload принимает cookie сессии только у запросов с того же сайта.
+    const api = (method: string, path: string, data?: object) =>
+      page.evaluate(
+        async ({ method, path, data }) => {
+          const res = await fetch(path, { method, headers: { 'content-type': 'application/json' }, body: data ? JSON.stringify(data) : undefined })
+          return { status: res.status, body: await res.text() }
+        },
+        { method, path, data },
+      )
+
+    expect((await api('GET', '/api/access')).status).toBe(200)
+
+    const shortPassword = await api('POST', '/api/users', { email: `short-${Date.now()}@example.com`, password: 'short-pass', name: 'Короткий пароль', role: 'editor' })
+    expect(shortPassword.status).toBe(400)
+    expect(shortPassword.body).toContain('не короче 12 символов')
+
+    const me = JSON.parse((await api('GET', '/api/users/me')).body).user as { id: number }
+    expect((await api('DELETE', `/api/users/${me.id}`)).status).toBe(403)
+    expect(JSON.parse((await api('GET', '/api/users/me')).body).user?.id).toBe(me.id)
+  })
+
   test('creates and publishes a news item that appears on the site', async ({ page }) => {
     const title = `Смоук-тест ${Date.now()}`
     await page.goto('/admin/collections/news/create')

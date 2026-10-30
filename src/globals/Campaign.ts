@@ -1,7 +1,9 @@
 import type { GlobalConfig } from 'payload'
 
 import { canManage } from '@/access'
+import { linkField } from '@/fields/common'
 import { editor } from '@/fields/richText'
+import { limitPublicGlobalQueries } from '@/hooks/limit-queries'
 import { revalidateGlobal } from '@/hooks/revalidate'
 
 export const Campaign: GlobalConfig = {
@@ -9,7 +11,7 @@ export const Campaign: GlobalConfig = {
   label: 'Кампания',
   admin: { group: 'Страницы', description: 'Архив предвыборной кампании. Программа берётся из раздела «Обещания».' },
   access: { read: () => true, update: canManage('campaign') },
-  hooks: revalidateGlobal,
+  hooks: { ...revalidateGlobal, beforeOperation: [limitPublicGlobalQueries] },
   fields: [
     {
       type: 'tabs',
@@ -59,7 +61,7 @@ export const Campaign: GlobalConfig = {
               fields: [
                 { name: 'title', type: 'text', label: 'Название', required: true },
                 { name: 'text', type: 'textarea', label: 'Описание' },
-                { name: 'href', type: 'text', label: 'Ссылка внутри сайта', admin: { placeholder: '/programme/...' } },
+                linkField('href', 'Ссылка', '/programme/...'),
               ],
             },
           ],

@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { isAdmin } from '@/access'
+import { isAdmin, isAdminField } from '@/access'
 import { MESSAGE_TOPICS } from '@/lib/contact'
 
 /**
@@ -58,5 +58,14 @@ export const Messages: CollectionConfig = {
       admin: { position: 'sidebar' },
     },
     { name: 'note', type: 'textarea', label: 'Заметка администрации', admin: { position: 'sidebar' } },
+    {
+      // Ключ отправителя для ограничения частоты (src/lib/contact-guard.ts): HMAC от IP, сам адрес не хранится.
+      // Пишет его только серверное действие формы, в панели поле скрыто.
+      name: 'clientKey',
+      type: 'text',
+      index: true,
+      access: { read: isAdminField, create: () => false, update: () => false },
+      admin: { hidden: true },
+    },
   ],
 }

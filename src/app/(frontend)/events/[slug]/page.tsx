@@ -16,6 +16,7 @@ import type { Album, Member, News, Promise as PromiseDoc, Report } from '@/paylo
 import { getEvent } from '@/lib/data'
 import { eventPhase, shouldShowCountdown } from '@/lib/events'
 import { formatDate, formatTime, formatWeekday } from '@/lib/format'
+import { jsonLdHtml } from '@/lib/json-ld'
 import { pageMeta } from '@/lib/meta'
 import { docs } from '@/lib/rel'
 import { siteUrl } from '@/lib/site'
@@ -241,7 +242,7 @@ export default async function EventPage({ params }: Props) {
           <Related title="Фото и видео" items={albums.map((a) => ({ href: `/gallery/${a.slug}`, kind: 'Альбом', title: a.title }))} />
         </aside>
       </div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(jsonLd) }} />
     </article>
   )
 }
