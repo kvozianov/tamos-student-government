@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { useActionState, useState } from 'react'
 
 import { sendMessage } from '@/app/(frontend)/contact/actions'
-import { MESSAGE_TOPICS, type ContactState } from '@/lib/contact'
+import { CONTACT_MAX_LENGTH, MESSAGE_TOPICS, type ContactState } from '@/lib/contact'
 
 const field = 'mt-2 block w-full border border-rule bg-paper px-4 py-3 text-[16px] text-ink transition-colors focus:border-navy-700 focus:outline-none aria-invalid:border-brand-red'
 
@@ -36,13 +36,13 @@ export function ContactForm() {
 
       <div className="grid gap-6 sm:grid-cols-2">
         <Field id="name" label="Имя" error={errors.name}>
-          <input id="name" name="name" required autoComplete="name" defaultValue={v?.name} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? 'name-error' : undefined} className={field} />
+          <input id="name" name="name" required maxLength={CONTACT_MAX_LENGTH.name} autoComplete="name" defaultValue={v?.name} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? 'name-error' : undefined} className={field} />
         </Field>
         <Field id="email" label="Почта для ответа" error={errors.email}>
-          <input id="email" name="email" type="email" required autoComplete="email" defaultValue={v?.email} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'email-error' : undefined} className={field} />
+          <input id="email" name="email" type="email" required maxLength={CONTACT_MAX_LENGTH.email} autoComplete="email" defaultValue={v?.email} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'email-error' : undefined} className={field} />
         </Field>
         <Field id="grade" label="Класс (необязательно)">
-          <input id="grade" name="grade" defaultValue={v?.grade} placeholder="10B" className={field} />
+          <input id="grade" name="grade" maxLength={CONTACT_MAX_LENGTH.grade} defaultValue={v?.grade} placeholder="10B" className={field} />
         </Field>
         <Field id="topic" label="Раздел">
           <select id="topic" name="topic" defaultValue={v?.topic ?? 'question'} className={field}>
@@ -55,10 +55,10 @@ export function ContactForm() {
         </Field>
       </div>
       <Field id="subject" label="Тема" error={errors.subject}>
-        <input id="subject" name="subject" required maxLength={140} defaultValue={v?.subject} aria-invalid={Boolean(errors.subject)} aria-describedby={errors.subject ? 'subject-error' : undefined} className={field} />
+        <input id="subject" name="subject" required maxLength={CONTACT_MAX_LENGTH.subject} defaultValue={v?.subject} aria-invalid={Boolean(errors.subject)} aria-describedby={errors.subject ? 'subject-error' : undefined} className={field} />
       </Field>
       <Field id="message" label="Сообщение" error={errors.message}>
-        <textarea id="message" name="message" required rows={6} maxLength={4000} defaultValue={v?.message} aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? 'message-error' : undefined} className={clsx(field, 'resize-y')} />
+        <textarea id="message" name="message" required rows={6} maxLength={CONTACT_MAX_LENGTH.message} defaultValue={v?.message} aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? 'message-error' : undefined} className={clsx(field, 'resize-y')} />
       </Field>
 
       {errors.form ? (

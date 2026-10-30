@@ -714,6 +714,7 @@ export interface Message {
   message: string;
   status: 'new' | 'in_progress' | 'answered';
   note?: string | null;
+  clientKey?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1231,6 +1232,7 @@ export interface MessagesSelect<T extends boolean = true> {
   message?: T;
   status?: T;
   note?: T;
+  clientKey?: T;
   updatedAt?: T;
   createdAt?: T;
 }
