@@ -72,7 +72,7 @@ The visual language (colours, typography, grid, components, photo rules) is docu
 
 ## Running locally
 
-Requirements: Node.js 20.18+ and PostgreSQL 14+ (or Docker, see below).
+Requirements: Node.js 22.23.4+ (or 24.22.1+) and PostgreSQL 14+ (or Docker, see below).
 
 ```bash
 cp .env.example .env        # set DATABASE_URL and PAYLOAD_SECRET
@@ -139,7 +139,7 @@ pg_dump --no-owner --no-acl "$OLD_DATABASE_URL" > tamos.sql
 psql "$NEW_DATABASE_URL" < tamos.sql
 ```
 
-**2. Files.** If Vercel Blob stays, nothing changes. To keep uploads on the server, leave `BLOB_READ_WRITE_TOKEN` empty; new uploads go to `./media` and `./documents`. Existing files can be downloaded from the Blob store and re-uploaded through the admin panel.
+**2. Files.** If Vercel Blob stays, nothing changes. To keep uploads on the server, leave `BLOB_READ_WRITE_TOKEN` empty; new uploads go to `./media` and `./documents` (named volumes `media` and `documents` with Docker). Existing files can be downloaded from the Blob store and re-uploaded through the admin panel.
 
 **3. Run the site.** With Docker:
 
@@ -149,7 +149,7 @@ docker compose up -d    # Postgres + site on port 3000; first start builds the a
 docker compose exec app npm run create-admin   # with ADMIN_EMAIL / ADMIN_PASSWORD in .env
 ```
 
-Without Docker: `npm ci && npm run migrate && npm run build && npm run start` under a process manager (systemd or pm2), Node.js 20.18+, at least 2 GB RAM for the build.
+Without Docker: `npm ci && npm run migrate && npm run build && npm run start` under a process manager (systemd or pm2), Node.js 22.23.4+ (or 24.22.1+), at least 2 GB RAM for the build.
 
 **4. Domain and HTTPS.** Point a subdomain such as `student.tamos-education.kz` to the server (A record) or to Vercel (CNAME `cname.vercel-dns.com`). On a server, put Nginx or Caddy in front of port 3000 for TLS. Set `NEXT_PUBLIC_SITE_URL` to the final address and redeploy: it is used for canonical links, the sitemap, Open Graph images and the admin panel's CSRF protection.
 
@@ -171,7 +171,7 @@ Without Docker: `npm ci && npm run migrate && npm run build && npm run start` un
 0 3 * * * pg_dump --format=custom "$DATABASE_URL" > /backups/tamos-$(date +\%F).dump && find /backups -name 'tamos-*.dump' -mtime +14 -delete
 ```
 
-Restore with `pg_restore --clean --no-owner -d "$DATABASE_URL" /backups/tamos-YYYY-MM-DD.dump`. Back up the `media/` and `documents/` folders together with the database if files are stored locally.
+Restore with `pg_restore --clean --no-owner -d "$DATABASE_URL" /backups/tamos-YYYY-MM-DD.dump`. Back up the `media/` and `documents/` folders (or the Docker volumes of the same names) together with the database if files are stored locally.
 
 ## Licence
 

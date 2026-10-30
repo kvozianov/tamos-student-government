@@ -21,7 +21,7 @@ const basePolicy: Policy = {
   'default-src': ["'self'"],
   'script-src': ["'self'", "'unsafe-inline'"],
   'style-src': ["'self'", "'unsafe-inline'"],
-  'img-src': ["'self'", 'data:', 'blob:', 'https://i.ytimg.com', 'https://www.gravatar.com'],
+  'img-src': ["'self'", 'data:', 'blob:', 'https://i.ytimg.com'],
   'media-src': ["'self'", 'blob:'],
   'font-src': ["'self'", 'data:'],
   'connect-src': ["'self'", 'https://vercel.com/api/blob/'],

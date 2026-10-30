@@ -32,6 +32,8 @@ export default buildConfig({
   serverURL,
   admin: {
     user: Users.slug,
+    // Без Gravatar: панель не обращается к внешним сервисам, и CSP не нужно их разрешать.
+    avatar: 'default',
     importMap: { baseDir: path.resolve(dirname) },
     meta: {
       titleSuffix: ' — TAMOS',
