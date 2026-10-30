@@ -3,6 +3,7 @@ import path from 'path'
 
 import { isAdmin, isStaff } from '@/access'
 import { demoField } from '@/fields/common'
+import { limitPublicQueries } from '@/hooks/limit-queries'
 import { revalidateCollection } from '@/hooks/revalidate'
 
 export const Documents: CollectionConfig = {
@@ -15,7 +16,7 @@ export const Documents: CollectionConfig = {
     description: 'PDF, Word, Excel и PowerPoint для отчётов, обещаний и событий.',
   },
   access: { read: () => true, create: isStaff, update: isStaff, delete: isAdmin },
-  hooks: revalidateCollection,
+  hooks: { ...revalidateCollection, beforeOperation: [limitPublicQueries] },
   upload: {
     staticDir: path.resolve(process.cwd(), 'documents'),
     mimeTypes: [

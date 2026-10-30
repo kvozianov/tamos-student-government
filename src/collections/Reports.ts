@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { canManage, isAdmin, publishedOrStaff } from '@/access'
 import { demoField, slugField } from '@/fields/common'
 import { editor } from '@/fields/richText'
+import { limitPublicQueries } from '@/hooks/limit-queries'
 import { revalidateCollection } from '@/hooks/revalidate'
 import { REPORT_TYPES, toOptions } from '@/lib/status'
 import { previewUrl } from '@/lib/site'
@@ -21,7 +22,7 @@ export const Reports: CollectionConfig = {
   defaultSort: '-publishedAt',
   versions: { drafts: true, maxPerDoc: 30 },
   access: { read: publishedOrStaff, create: canManage('reports'), update: canManage('reports'), delete: isAdmin },
-  hooks: revalidateCollection,
+  hooks: { ...revalidateCollection, beforeOperation: [limitPublicQueries] },
   fields: [
     { name: 'title', type: 'text', label: 'Название', required: true },
     {

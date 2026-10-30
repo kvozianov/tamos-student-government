@@ -9,7 +9,7 @@ import { Providers } from '@/components/site/Providers'
 import { getLatestNews, getSettings, getUpcomingEvents } from '@/lib/data'
 import { formatDate } from '@/lib/format'
 import { asMedia, mediaUrl } from '@/lib/media'
-import { siteUrl } from '@/lib/site'
+import { safeHref, siteUrl } from '@/lib/site'
 
 import './globals.css'
 
@@ -69,7 +69,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       meta: ev.dateConfirmed && ev.startsAt ? formatDate(ev.startsAt) : 'дата уточняется',
     })
   }
-  const ticker = settings.ticker?.length ? settings.ticker.map((t) => ({ text: t.text, href: t.href })) : DEFAULT_TICKER
+  const ticker = settings.ticker?.length ? settings.ticker.map((t) => ({ text: t.text, href: safeHref(t.href) })) : DEFAULT_TICKER
 
   return (
     <html lang="ru" className={`${serif.variable} ${sans.variable} ${wide.variable}`}>

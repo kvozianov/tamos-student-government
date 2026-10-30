@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { canManage, isAdmin, publishedOrStaff } from '@/access'
 import { demoField, slugField, urlField } from '@/fields/common'
 import { editor } from '@/fields/richText'
+import { limitPublicQueries } from '@/hooks/limit-queries'
 import { revalidateCollection } from '@/hooks/revalidate'
 import { PROMISE_STATUSES, toOptions } from '@/lib/status'
 import { previewUrl } from '@/lib/site'
@@ -22,6 +23,7 @@ export const Promises: CollectionConfig = {
   access: { read: publishedOrStaff, create: canManage('promises'), update: canManage('promises'), delete: isAdmin },
   hooks: {
     ...revalidateCollection,
+    beforeOperation: [limitPublicQueries],
     beforeChange: [
       ({ data, originalDoc, operation }) => {
         if (operation === 'create' || (originalDoc && originalDoc.status !== data.status)) {

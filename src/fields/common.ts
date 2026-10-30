@@ -1,5 +1,6 @@
 import type { Field, TextField, TextFieldSingleValidation } from 'payload'
 
+import { safeHref } from '@/lib/site'
 import { slugify } from '@/lib/slugify'
 
 export const slugField = (from = 'title'): Field => ({
@@ -54,4 +55,16 @@ export const urlField = (name: string, label: string, description?: string): Tex
   label,
   validate: validateUrl,
   admin: description ? { description } : undefined,
+})
+
+/** Ссылка на странице сайта: путь внутри сайта (/events) или полный адрес http(s). */
+export const validateLink: TextFieldSingleValidation = (value) =>
+  !value || safeHref(value) !== null || 'Укажите путь внутри сайта, например /events, или полный адрес https://…'
+
+export const linkField = (name: string, label: string, placeholder?: string): TextField => ({
+  name,
+  type: 'text',
+  label,
+  validate: validateLink,
+  admin: { placeholder, description: 'Путь внутри сайта, например /events, или полный адрес https://…' },
 })

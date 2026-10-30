@@ -3,6 +3,7 @@ import type { CollectionConfig, DateFieldValidation } from 'payload'
 import { canManage, isAdmin, publishedOrStaff } from '@/access'
 import { demoField, slugField, urlField } from '@/fields/common'
 import { editor } from '@/fields/richText'
+import { limitPublicQueries } from '@/hooks/limit-queries'
 import { revalidateCollection } from '@/hooks/revalidate'
 import { EVENT_STATUSES, toOptions } from '@/lib/status'
 import { previewUrl } from '@/lib/site'
@@ -37,6 +38,7 @@ export const Events: CollectionConfig = {
   access: { read: publishedOrStaff, create: canManage('events'), update: canManage('events'), delete: isAdmin },
   hooks: {
     ...revalidateCollection,
+    beforeOperation: [limitPublicQueries],
     beforeChange: [
       ({ data }) => {
         // Статус «Дата утверждена» всегда означает утверждённую дату.

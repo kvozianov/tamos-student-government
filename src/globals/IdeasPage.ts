@@ -2,6 +2,7 @@ import type { GlobalConfig } from 'payload'
 
 import { canManage } from '@/access'
 import { editor } from '@/fields/richText'
+import { limitPublicGlobalQueries } from '@/hooks/limit-queries'
 import { revalidateGlobal } from '@/hooks/revalidate'
 
 export const IdeasPage: GlobalConfig = {
@@ -9,7 +10,7 @@ export const IdeasPage: GlobalConfig = {
   label: 'Страница Бюро идей',
   admin: { group: 'Страницы', description: 'Ссылка на Google Forms задаётся в «Настройках сайта».' },
   access: { read: () => true, update: canManage('ideas') },
-  hooks: revalidateGlobal,
+  hooks: { ...revalidateGlobal, beforeOperation: [limitPublicGlobalQueries] },
   fields: [
     { name: 'lead', type: 'textarea', label: 'Главная мысль', required: true },
     { name: 'about', type: 'richText', label: 'О Бюро идей', editor },

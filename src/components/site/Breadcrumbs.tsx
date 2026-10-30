@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 
+import { jsonLdHtml } from '@/lib/json-ld'
 import { siteUrl } from '@/lib/site'
 
 import { SiteLink } from './SiteLink'
@@ -36,7 +37,7 @@ export function Breadcrumbs({ items, onDark = false }: { items: Crumb[]; onDark?
           </li>
         ))}
       </ol>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(jsonLd) }} />
     </nav>
   )
 }

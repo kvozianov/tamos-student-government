@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { canManage, isAdmin, publishedOrStaff } from '@/access'
 import { demoField, slugField } from '@/fields/common'
 import { editor } from '@/fields/richText'
+import { limitPublicQueries } from '@/hooks/limit-queries'
 import { revalidateCollection } from '@/hooks/revalidate'
 import { IDEA_STATUSES, toOptions } from '@/lib/status'
 import { previewUrl } from '@/lib/site'
@@ -19,7 +20,7 @@ export const Ideas: CollectionConfig = {
   defaultSort: '-submittedAt',
   versions: { drafts: true, maxPerDoc: 30 },
   access: { read: publishedOrStaff, create: canManage('ideas'), update: canManage('ideas'), delete: isAdmin },
-  hooks: revalidateCollection,
+  hooks: { ...revalidateCollection, beforeOperation: [limitPublicQueries] },
   fields: [
     { name: 'title', type: 'text', label: 'Название проекта', required: true },
     { name: 'summary', type: 'textarea', label: 'Краткое описание', required: true, maxLength: 360 },

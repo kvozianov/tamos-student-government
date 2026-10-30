@@ -1442,6 +1442,9 @@ export interface Campaign {
     | {
         title: string;
         text?: string | null;
+        /**
+         * Путь внутри сайта, например /events, или полный адрес https://…
+         */
         href?: string | null;
         id?: string | null;
       }[]
@@ -1508,6 +1511,9 @@ export interface Setting {
   ticker?:
     | {
         text: string;
+        /**
+         * Путь внутри сайта, например /events, или полный адрес https://…
+         */
         href?: string | null;
         id?: string | null;
       }[]

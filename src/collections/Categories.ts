@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { canManage, isAdmin } from '@/access'
 import { slugField } from '@/fields/common'
+import { limitPublicQueries } from '@/hooks/limit-queries'
 import { revalidateCollection } from '@/hooks/revalidate'
 
 export const Categories: CollectionConfig = {
@@ -10,7 +11,7 @@ export const Categories: CollectionConfig = {
   admin: { useAsTitle: 'title', defaultColumns: ['title', 'order'], group: 'Программа' },
   defaultSort: 'order',
   access: { read: () => true, create: canManage('categories'), update: canManage('categories'), delete: isAdmin },
-  hooks: revalidateCollection,
+  hooks: { ...revalidateCollection, beforeOperation: [limitPublicQueries] },
   fields: [
     { name: 'title', type: 'text', label: 'Название', required: true },
     { name: 'description', type: 'textarea', label: 'Описание' },

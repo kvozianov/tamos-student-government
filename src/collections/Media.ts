@@ -3,6 +3,7 @@ import path from 'path'
 
 import { isAdmin, isStaff } from '@/access'
 import { demoField } from '@/fields/common'
+import { limitPublicQueries } from '@/hooks/limit-queries'
 import { revalidateCollection } from '@/hooks/revalidate'
 
 const webp = { format: 'webp' as const, options: { quality: 80 } }
@@ -16,7 +17,7 @@ export const Media: CollectionConfig = {
     description: 'Фотографии и видео для новостей, событий, галереи и страниц. JPG, PNG, WebP, AVIF, MP4, WebM, MOV.',
   },
   access: { read: () => true, create: isStaff, update: isStaff, delete: isAdmin },
-  hooks: revalidateCollection,
+  hooks: { ...revalidateCollection, beforeOperation: [limitPublicQueries] },
   upload: {
     staticDir: path.resolve(process.cwd(), 'media'),
     mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif', 'video/mp4', 'video/webm', 'video/quicktime'],
