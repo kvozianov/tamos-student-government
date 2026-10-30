@@ -2,7 +2,7 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { ru } from '@payloadcms/translations/languages/ru'
 import path from 'path'
-import { buildConfig } from 'payload'
+import { accessOperation, buildConfig, headersWithCors } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
@@ -41,6 +41,7 @@ export default buildConfig({
     components: {
       graphics: { Logo: '/components/admin/Logo#Logo', Icon: '/components/admin/Logo#Icon' },
       beforeDashboard: ['/components/admin/Welcome#Welcome'],
+      afterLogin: ['/components/admin/LoginNote#LoginNote'],
     },
     dateFormat: 'd MMMM yyyy, HH:mm',
     theme: 'light',
@@ -56,6 +57,19 @@ export default buildConfig({
   i18n: { supportedLanguages: { ru }, fallbackLanguage: 'ru' },
   collections: [News, Events, Promises, Categories, Ideas, Reports, Albums, Members, Media, Documents, Messages, Users],
   globals: [Home, IdeasPage, Campaign, Settings],
+  endpoints: [
+    {
+      // Замена стандартного /api/access: карта прав и полей схемы только для вошедших в панель.
+      // Пользовательские эндпоинты Payload проверяет раньше встроенных.
+      path: '/access',
+      method: 'get',
+      handler: async (req) => {
+        const headers = headersWithCors({ headers: new Headers(), req })
+        if (!req.user) return Response.json({ message: 'Not Found' }, { headers, status: 404 })
+        return Response.json(await accessOperation({ req }), { headers })
+      },
+    },
+  ],
   editor,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
